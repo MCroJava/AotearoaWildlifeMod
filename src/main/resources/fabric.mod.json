@@ -20,6 +20,9 @@
 		],
 		"fabric-datagen": [
 			"com.miller.wildlifemod.AotearoaWildlifeDataGenerator"
+		],
+		"client": [
+			"com.miller.wildlifemod.client.AotearoaWildlifeClient"
 		]
 	},
 	"mixins": [

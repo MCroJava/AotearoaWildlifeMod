@@ -1,0 +1,106 @@
+package com.miller.wildlifemod.client.model;
+
+import com.miller.wildlifemod.client.entity.state.HoihoEntityRenderState;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.resources.Identifier;
+
+public class HoihoModel extends EntityModel<HoihoEntityRenderState>{
+	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(Identifier.fromNamespaceAndPath("wildlifemod", "hoihomodel"), "main");
+	private final ModelPart Hoiho;
+	private final ModelPart Body;
+	private final ModelPart Feet;
+	private final ModelPart RightFoot;
+	private final ModelPart LeftFoot;
+	private final ModelPart Torso;
+	private final ModelPart Chest;
+	private final ModelPart Tail;
+	private final ModelPart Flippers;
+	private final ModelPart LeftFlipper;
+	private final ModelPart RightFlipper;
+	private final ModelPart Head;
+	private final ModelPart Eyes;
+	private final ModelPart Beak;
+	private final ModelPart Top;
+	private final ModelPart Bottom;
+
+	public HoihoModel(ModelPart root) {
+        super(root);
+        this.Hoiho = root.getChild("Hoiho");
+		this.Body = this.Hoiho.getChild("Body");
+		this.Feet = this.Body.getChild("Feet");
+		this.RightFoot = this.Feet.getChild("RightFoot");
+		this.LeftFoot = this.Feet.getChild("LeftFoot");
+		this.Torso = this.Body.getChild("Torso");
+		this.Chest = this.Torso.getChild("Chest");
+		this.Tail = this.Torso.getChild("Tail");
+		this.Flippers = this.Body.getChild("Flippers");
+		this.LeftFlipper = this.Flippers.getChild("LeftFlipper");
+		this.RightFlipper = this.Flippers.getChild("RightFlipper");
+		this.Head = this.Body.getChild("Head");
+		this.Eyes = this.Head.getChild("Eyes");
+		this.Beak = this.Head.getChild("Beak");
+		this.Top = this.Beak.getChild("Top");
+		this.Bottom = this.Beak.getChild("Bottom");
+	}
+
+	public static LayerDefinition createBodyLayer() {
+		MeshDefinition meshdefinition = new MeshDefinition();
+		PartDefinition partdefinition = meshdefinition.getRoot();
+
+		PartDefinition Hoiho = partdefinition.addOrReplaceChild("Hoiho", CubeListBuilder.create(), PartPose.offset(0.0F, 24.0F, 0.0F));
+
+		PartDefinition Body = Hoiho.addOrReplaceChild("Body", CubeListBuilder.create(), PartPose.offset(0.0F, -9.0F, 0.0F));
+
+		PartDefinition Feet = Body.addOrReplaceChild("Feet", CubeListBuilder.create(), PartPose.offset(0.0F, 8.0F, 0.0F));
+
+		PartDefinition RightFoot = Feet.addOrReplaceChild("RightFoot", CubeListBuilder.create().texOffs(44, 7).addBox(-1.0F, 0.0F, -1.0F, 2.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(-2.5F, 0.0F, 0.0F));
+
+		PartDefinition LeftFoot = Feet.addOrReplaceChild("LeftFoot", CubeListBuilder.create().texOffs(20, 30).addBox(-1.0F, 0.0F, -1.0F, 2.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(2.5F, 0.0F, 0.0F));
+
+		PartDefinition Torso = Body.addOrReplaceChild("Torso", CubeListBuilder.create().texOffs(0, 11).addBox(-5.0F, -3.0F, -1.0F, 10.0F, 8.0F, 4.0F, new CubeDeformation(0.0F))
+		.texOffs(28, 16).addBox(-4.0F, -3.0F, -2.0F, 8.0F, 8.0F, 1.0F, new CubeDeformation(0.0F))
+		.texOffs(28, 11).addBox(-4.0F, 5.0F, -1.0F, 8.0F, 1.0F, 4.0F, new CubeDeformation(0.0F))
+		.texOffs(28, 25).addBox(-4.0F, -3.0F, 3.0F, 8.0F, 8.0F, 1.0F, new CubeDeformation(0.0F))
+		.texOffs(30, 0).addBox(-3.0F, -3.0F, 4.0F, 6.0F, 8.0F, 1.0F, new CubeDeformation(0.0F))
+		.texOffs(0, 44).addBox(-2.0F, 1.0F, 5.0F, 4.0F, 4.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 2.0F, -1.0F));
+
+		PartDefinition Chest = Torso.addOrReplaceChild("Chest", CubeListBuilder.create().texOffs(20, 34).addBox(-3.0F, -3.0F, -1.0F, 6.0F, 7.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, -2.0F));
+
+		PartDefinition Tail = Torso.addOrReplaceChild("Tail", CubeListBuilder.create().texOffs(10, 46).addBox(-1.0F, -1.0F, 0.0F, 2.0F, 2.0F, 1.0F, new CubeDeformation(0.0F))
+		.texOffs(30, 9).addBox(-0.5F, -0.3F, 1.0F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 3.5F, 6.0F));
+
+		PartDefinition Flippers = Body.addOrReplaceChild("Flippers", CubeListBuilder.create(), PartPose.offset(0.0F, -1.0F, 0.0F));
+
+		PartDefinition LeftFlipper = Flippers.addOrReplaceChild("LeftFlipper", CubeListBuilder.create().texOffs(20, 42).addBox(-0.7F, 0.0F, -1.5F, 1.0F, 8.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offset(5.0F, -1.0F, 0.0F));
+
+		PartDefinition RightFlipper = Flippers.addOrReplaceChild("RightFlipper", CubeListBuilder.create().texOffs(12, 35).addBox(-0.3F, 0.0F, -1.5F, 1.0F, 8.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offset(-5.0F, -1.0F, 0.0F));
+
+		PartDefinition Head = Body.addOrReplaceChild("Head", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -4.0F, -3.0F, 8.0F, 4.0F, 7.0F, new CubeDeformation(0.0F))
+		.texOffs(0, 23).addBox(-4.0F, -5.0F, -3.0F, 8.0F, 1.0F, 6.0F, new CubeDeformation(0.0F))
+		.texOffs(0, 30).addBox(-3.0F, -6.0F, -2.0F, 6.0F, 1.0F, 4.0F, new CubeDeformation(0.0F))
+		.texOffs(34, 34).addBox(-4.0F, -2.0F, -4.0F, 8.0F, 2.0F, 1.0F, new CubeDeformation(0.0F))
+		.texOffs(0, 35).addBox(4.0F, -4.0F, -2.0F, 1.0F, 4.0F, 5.0F, new CubeDeformation(0.0F))
+		.texOffs(34, 37).addBox(-5.0F, -4.0F, -2.0F, 1.0F, 4.0F, 5.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -1.0F, -1.0F));
+
+		PartDefinition Eyes = Head.addOrReplaceChild("Eyes", CubeListBuilder.create().texOffs(28, 42).addBox(-3.8F, -1.0F, -0.2F, 2.0F, 2.0F, 1.0F, new CubeDeformation(0.0F))
+		.texOffs(28, 45).addBox(1.8F, -1.0F, -0.2F, 2.0F, 2.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -3.0F, -3.0F));
+
+		PartDefinition Beak = Head.addOrReplaceChild("Beak", CubeListBuilder.create(), PartPose.offset(0.0F, -2.0F, -3.0F));
+
+		PartDefinition Top = Beak.addOrReplaceChild("Top", CubeListBuilder.create().texOffs(44, 0).addBox(-1.0F, -1.0F, -3.0F, 2.0F, 1.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+
+		PartDefinition Bottom = Beak.addOrReplaceChild("Bottom", CubeListBuilder.create().texOffs(44, 4).addBox(-1.0F, 0.0F, -3.0F, 2.0F, 0.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+
+		return LayerDefinition.create(meshdefinition, 64, 64);
+	}
+
+	@Override
+	public void setupAnim(HoihoEntityRenderState state) {
+		super.setupAnim(state);
+	}
+}

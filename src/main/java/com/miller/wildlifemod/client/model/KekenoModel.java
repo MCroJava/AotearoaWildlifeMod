@@ -1,0 +1,120 @@
+package com.miller.wildlifemod.client.model;
+
+
+import com.miller.wildlifemod.client.entity.state.KekenoEntityRenderState;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.resources.Identifier;
+
+public class KekenoModel extends EntityModel<KekenoEntityRenderState> {
+	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(Identifier.fromNamespaceAndPath("wildlifemod", "kekenomodel"), "main");
+	private final ModelPart Kekeno;
+	private final ModelPart Body;
+	private final ModelPart Torso;
+	private final ModelPart Flippers;
+	private final ModelPart RearFlippers;
+	private final ModelPart BackLeft;
+	private final ModelPart BackRight;
+	private final ModelPart FrontFlippers;
+	private final ModelPart FrontRight;
+	private final ModelPart UpperR;
+	private final ModelPart FrontLeft;
+	private final ModelPart UpperL;
+	private final ModelPart Head;
+	private final ModelPart Snout;
+	private final ModelPart Eyes;
+	private final ModelPart Mouth;
+	private final ModelPart BottomMouth;
+
+	public KekenoModel(ModelPart root) {
+        super(root);
+        this.Kekeno = root.getChild("Kekeno");
+		this.Body = this.Kekeno.getChild("Body");
+		this.Torso = this.Body.getChild("Torso");
+		this.Flippers = this.Torso.getChild("Flippers");
+		this.RearFlippers = this.Flippers.getChild("RearFlippers");
+		this.BackLeft = this.RearFlippers.getChild("BackLeft");
+		this.BackRight = this.RearFlippers.getChild("BackRight");
+		this.FrontFlippers = this.Flippers.getChild("FrontFlippers");
+		this.FrontRight = this.FrontFlippers.getChild("FrontRight");
+		this.UpperR = this.FrontRight.getChild("UpperR");
+		this.FrontLeft = this.FrontFlippers.getChild("FrontLeft");
+		this.UpperL = this.FrontLeft.getChild("UpperL");
+		this.Head = this.Body.getChild("Head");
+		this.Snout = this.Head.getChild("Snout");
+		this.Eyes = this.Head.getChild("Eyes");
+		this.Mouth = this.Head.getChild("Mouth");
+		this.BottomMouth = this.Mouth.getChild("BottomMouth");
+	}
+
+	public static LayerDefinition createBodyLayer() {
+		MeshDefinition meshdefinition = new MeshDefinition();
+		PartDefinition partdefinition = meshdefinition.getRoot();
+
+		PartDefinition Kekeno = partdefinition.addOrReplaceChild("Kekeno", CubeListBuilder.create(), PartPose.offset(0.0F, 24.0F, 0.0F));
+
+		PartDefinition Body = Kekeno.addOrReplaceChild("Body", CubeListBuilder.create(), PartPose.offset(0.0F, -2.0F, -2.0F));
+
+		PartDefinition Torso = Body.addOrReplaceChild("Torso", CubeListBuilder.create().texOffs(0, 0).addBox(-2.4F, -2.0F, -2.0F, 5.0F, 4.0F, 6.0F, new CubeDeformation(0.0F))
+		.texOffs(0, 10).addBox(-1.9F, -2.5F, -2.0F, 4.0F, 1.0F, 5.0F, new CubeDeformation(0.0F))
+		.texOffs(0, 16).addBox(-2.0F, -1.0F, 4.0F, 4.0F, 3.0F, 4.0F, new CubeDeformation(0.0F))
+		.texOffs(18, 10).addBox(-1.5F, -1.6F, 4.0F, 3.0F, 3.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+
+		PartDefinition upperneckfront_r1 = Torso.addOrReplaceChild("upperneckfront_r1", CubeListBuilder.create().texOffs(22, 6).addBox(-3.0F, -5.0F, -2.0F, 4.0F, 2.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(1.1F, 0.8F, -1.2F, 0.2618F, 0.0F, 0.0F));
+
+		PartDefinition lowerneck_r1 = Torso.addOrReplaceChild("lowerneck_r1", CubeListBuilder.create().texOffs(16, 16).addBox(-3.0F, -3.0F, -2.0F, 5.0F, 4.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.6F, -0.2F, -0.8F, 0.5236F, 0.0F, 0.0F));
+
+		PartDefinition Flippers = Torso.addOrReplaceChild("Flippers", CubeListBuilder.create(), PartPose.offset(0.0F, 2.0F, 0.0F));
+
+		PartDefinition RearFlippers = Flippers.addOrReplaceChild("RearFlippers", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 8.0F));
+
+		PartDefinition BackLeft = RearFlippers.addOrReplaceChild("BackLeft", CubeListBuilder.create(), PartPose.offset(1.0F, 0.0F, -1.0F));
+
+		PartDefinition left_r1 = BackLeft.addOrReplaceChild("left_r1", CubeListBuilder.create().texOffs(0, 23).addBox(-1.0F, -1.0F, -1.0F, 2.0F, 1.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(1.0F, 0.0F, 0.9F, 0.0F, 0.829F, 0.0F));
+
+		PartDefinition BackRight = RearFlippers.addOrReplaceChild("BackRight", CubeListBuilder.create(), PartPose.offset(-1.0F, 0.0F, -1.0F));
+
+		PartDefinition right_r1 = BackRight.addOrReplaceChild("right_r1", CubeListBuilder.create().texOffs(10, 26).addBox(-1.0F, -1.0F, -1.0F, 2.0F, 1.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-1.0F, 0.0F, 0.9F, 0.0F, -0.829F, 0.0F));
+
+		PartDefinition FrontFlippers = Flippers.addOrReplaceChild("FrontFlippers", CubeListBuilder.create(), PartPose.offset(0.0F, -3.0F, -2.0F));
+
+		PartDefinition FrontRight = FrontFlippers.addOrReplaceChild("FrontRight", CubeListBuilder.create(), PartPose.offset(-2.0F, -0.5F, 0.4F));
+
+		PartDefinition lowerarm_r1 = FrontRight.addOrReplaceChild("lowerarm_r1", CubeListBuilder.create().texOffs(0, 30).addBox(0.0F, -2.0F, -1.0F, 1.0F, 4.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-1.2F, 1.5F, -0.4F, -0.258F, 0.045F, 0.4305F));
+
+		PartDefinition UpperR = FrontRight.addOrReplaceChild("UpperR", CubeListBuilder.create(), PartPose.offset(-1.3F, 3.0F, -0.5F));
+
+		PartDefinition upperarm_r1 = UpperR.addOrReplaceChild("upperarm_r1", CubeListBuilder.create().texOffs(26, 22).addBox(-1.0F, -1.0F, -1.0F, 3.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-1.9F, 0.5F, -0.5F, 0.0F, -0.1571F, 0.0F));
+
+		PartDefinition FrontLeft = FrontFlippers.addOrReplaceChild("FrontLeft", CubeListBuilder.create(), PartPose.offset(2.0F, -0.3F, 0.6F));
+
+		PartDefinition lowerarm_r2 = FrontLeft.addOrReplaceChild("lowerarm_r2", CubeListBuilder.create().texOffs(6, 30).addBox(-1.1F, -2.0F, -1.0F, 1.0F, 4.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(1.4F, 1.3F, -0.6F, -0.2545F, -0.045F, -0.4527F));
+
+		PartDefinition UpperL = FrontLeft.addOrReplaceChild("UpperL", CubeListBuilder.create(), PartPose.offset(1.0F, 4.0F, 0.0F));
+
+		PartDefinition upperarm_r2 = UpperL.addOrReplaceChild("upperarm_r2", CubeListBuilder.create().texOffs(0, 27).addBox(-1.0F, -1.0F, -1.0F, 3.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(1.3F, -0.7F, -1.1F, 0.0F, 0.1571F, 0.0F));
+
+		PartDefinition Head = Body.addOrReplaceChild("Head", CubeListBuilder.create().texOffs(22, 0).addBox(-1.4F, -2.5F, -2.325F, 3.0F, 3.0F, 3.0F, new CubeDeformation(0.0F))
+		.texOffs(12, 30).addBox(-0.9F, -2.7F, -1.9F, 2.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -3.0F, -3.0F));
+
+		PartDefinition Snout = Head.addOrReplaceChild("Snout", CubeListBuilder.create(), PartPose.offset(0.0F, 5.5F, 3.4F));
+
+		PartDefinition Eyes = Head.addOrReplaceChild("Eyes", CubeListBuilder.create().texOffs(10, 23).addBox(-1.5F, -0.8F, -1.1F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F))
+		.texOffs(30, 13).addBox(0.7F, -0.8F, -1.2F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -1.1F, -1.0F));
+
+		PartDefinition Mouth = Head.addOrReplaceChild("Mouth", CubeListBuilder.create().texOffs(30, 10).addBox(-0.9F, -0.6F, -1.1F, 2.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -1.2F, -2.3F));
+
+		PartDefinition BottomMouth = Mouth.addOrReplaceChild("BottomMouth", CubeListBuilder.create(), PartPose.offset(0.0F, 0.4F, 0.1F));
+
+		PartDefinition mouth_r1 = BottomMouth.addOrReplaceChild("mouth_r1", CubeListBuilder.create().texOffs(20, 26).addBox(-1.0F, 0.0F, -2.0F, 2.0F, 1.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.1F, -0.8F, 0.65F, 0.3927F, 0.0F, 0.0F));
+
+		return LayerDefinition.create(meshdefinition, 64, 64);
+	}
+	@Override
+	public void setupAnim(KekenoEntityRenderState state) {
+		super.setupAnim(state);
+	}
+}

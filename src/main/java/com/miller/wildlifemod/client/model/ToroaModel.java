@@ -1,0 +1,259 @@
+package com.miller.wildlifemod.client.model;
+
+import com.miller.wildlifemod.client.entity.state.ToroaEntityRenderState;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.resources.Identifier;
+
+public class ToroaModel extends EntityModel<ToroaEntityRenderState>{
+	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(Identifier.fromNamespaceAndPath("wildlifemod", "toroamodel"), "main");
+	private final ModelPart Toroa;
+	private final ModelPart Body;
+	private final ModelPart Neck;
+	private final ModelPart Head;
+	private final ModelPart Eyes;
+	private final ModelPart Beak;
+	private final ModelPart Torso;
+	private final ModelPart Tail;
+	private final ModelPart Wings;
+	private final ModelPart LeftWing;
+	private final ModelPart Base;
+	private final ModelPart Middle;
+	private final ModelPart End;
+	private final ModelPart LFeather1;
+	private final ModelPart LFeather2;
+	private final ModelPart LFeather3;
+	private final ModelPart LFeather4;
+	private final ModelPart LFeather5;
+	private final ModelPart LFeather6;
+	private final ModelPart RightWing;
+	private final ModelPart Base2;
+	private final ModelPart Middle2;
+	private final ModelPart End2;
+	private final ModelPart RFeather1;
+	private final ModelPart RFeather2;
+	private final ModelPart RFeather3;
+	private final ModelPart RFeather4;
+	private final ModelPart RFeather5;
+	private final ModelPart RFeather6;
+	private final ModelPart Legs;
+	private final ModelPart LegRight;
+	private final ModelPart FootRight;
+	private final ModelPart LegLeft;
+	private final ModelPart FootLeft;
+
+	public ToroaModel(ModelPart root) {
+        super(root);
+        this.Toroa = root.getChild("Toroa");
+		this.Body = this.Toroa.getChild("Body");
+		this.Neck = this.Body.getChild("Neck");
+		this.Head = this.Neck.getChild("Head");
+		this.Eyes = this.Head.getChild("Eyes");
+		this.Beak = this.Head.getChild("Beak");
+		this.Torso = this.Body.getChild("Torso");
+		this.Tail = this.Torso.getChild("Tail");
+		this.Wings = this.Torso.getChild("Wings");
+		this.LeftWing = this.Wings.getChild("LeftWing");
+		this.Base = this.LeftWing.getChild("Base");
+		this.Middle = this.LeftWing.getChild("Middle");
+		this.End = this.LeftWing.getChild("End");
+		this.LFeather1 = this.End.getChild("LFeather1");
+		this.LFeather2 = this.End.getChild("LFeather2");
+		this.LFeather3 = this.End.getChild("LFeather3");
+		this.LFeather4 = this.End.getChild("LFeather4");
+		this.LFeather5 = this.End.getChild("LFeather5");
+		this.LFeather6 = this.End.getChild("LFeather6");
+		this.RightWing = this.Wings.getChild("RightWing");
+		this.Base2 = this.RightWing.getChild("Base2");
+		this.Middle2 = this.RightWing.getChild("Middle2");
+		this.End2 = this.RightWing.getChild("End2");
+		this.RFeather1 = this.End2.getChild("RFeather1");
+		this.RFeather2 = this.End2.getChild("RFeather2");
+		this.RFeather3 = this.End2.getChild("RFeather3");
+		this.RFeather4 = this.End2.getChild("RFeather4");
+		this.RFeather5 = this.End2.getChild("RFeather5");
+		this.RFeather6 = this.End2.getChild("RFeather6");
+		this.Legs = this.Body.getChild("Legs");
+		this.LegRight = this.Legs.getChild("LegRight");
+		this.FootRight = this.LegRight.getChild("FootRight");
+		this.LegLeft = this.Legs.getChild("LegLeft");
+		this.FootLeft = this.LegLeft.getChild("FootLeft");
+	}
+
+	public static LayerDefinition createBodyLayer() {
+		MeshDefinition meshdefinition = new MeshDefinition();
+		PartDefinition partdefinition = meshdefinition.getRoot();
+
+		PartDefinition Toroa = partdefinition.addOrReplaceChild("Toroa", CubeListBuilder.create(), PartPose.offset(0.0F, 16.0F, -2.0F));
+
+		PartDefinition Body = Toroa.addOrReplaceChild("Body", CubeListBuilder.create(), PartPose.offset(0.0F, -1.0F, 1.0F));
+
+		PartDefinition Neck = Body.addOrReplaceChild("Neck", CubeListBuilder.create(), PartPose.offset(0.0F, 0.4F, -5.6F));
+
+		PartDefinition neck_r1 = Neck.addOrReplaceChild("neck_r1", CubeListBuilder.create().texOffs(30, 43).addBox(-1.0F, -4.0F, -2.0F, 3.0F, 5.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.5F, 0.2F, 0.625F, 0.7854F, 0.0F, 0.0F));
+
+		PartDefinition Head = Neck.addOrReplaceChild("Head", CubeListBuilder.create().texOffs(16, 43).addBox(-2.0F, -2.0F, -3.0F, 4.0F, 4.0F, 3.0F, new CubeDeformation(0.0F))
+		.texOffs(30, 64).addBox(-1.0F, -2.5F, -2.0F, 2.0F, 1.0F, 1.0F, new CubeDeformation(0.0F))
+		.texOffs(46, 58).addBox(-2.0F, -1.5F, 0.0F, 4.0F, 3.0F, 1.0F, new CubeDeformation(0.0F))
+		.texOffs(56, 58).addBox(-2.0F, -1.5F, -4.0F, 4.0F, 3.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -2.0F, -2.0F));
+
+		PartDefinition Eyes = Head.addOrReplaceChild("Eyes", CubeListBuilder.create().texOffs(12, 47).addBox(-2.3F, -0.5F, -0.5F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F))
+		.texOffs(46, 55).addBox(1.3F, -0.5F, -0.5F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -0.5F, -2.5F));
+
+		PartDefinition Beak = Head.addOrReplaceChild("Beak", CubeListBuilder.create().texOffs(44, 38).addBox(-1.0F, 0.0F, -4.0F, 2.0F, 1.0F, 4.0F, new CubeDeformation(0.0F))
+		.texOffs(64, 27).addBox(-1.0F, -0.6F, -1.0F, 2.0F, 1.0F, 1.0F, new CubeDeformation(0.0F))
+		.texOffs(36, 51).addBox(-1.0F, 0.5F, -4.0F, 2.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, -4.0F));
+
+		PartDefinition Torso = Body.addOrReplaceChild("Torso", CubeListBuilder.create().texOffs(0, 0).addBox(-3.0F, -2.0F, -5.0F, 6.0F, 4.0F, 11.0F, new CubeDeformation(0.0F))
+		.texOffs(58, 29).addBox(-2.0F, -2.5F, -6.0F, 4.0F, 4.0F, 1.0F, new CubeDeformation(0.0F))
+		.texOffs(0, 29).addBox(-2.0F, -2.5F, -5.0F, 4.0F, 1.0F, 10.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 2.0F, -1.0F));
+
+		PartDefinition Tail = Torso.addOrReplaceChild("Tail", CubeListBuilder.create().texOffs(42, 43).addBox(-2.6F, -1.6F, -1.0F, 5.0F, 3.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 6.0F));
+
+		PartDefinition tailfeather15_r1 = Tail.addOrReplaceChild("tailfeather15_r1", CubeListBuilder.create().texOffs(46, 62).addBox(-1.0F, -1.0F, -1.0F, 1.0F, 1.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-1.7F, 1.525F, 1.4F, -0.2399F, -0.4253F, 0.1006F));
+
+		PartDefinition tailfeather14_r1 = Tail.addOrReplaceChild("tailfeather14_r1", CubeListBuilder.create().texOffs(0, 57).addBox(-1.0F, -1.0F, -1.0F, 1.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.4F, 1.525F, 1.7F, 0.0F, -0.0873F, 0.0F));
+
+		PartDefinition tailfeather13_r1 = Tail.addOrReplaceChild("tailfeather13_r1", CubeListBuilder.create().texOffs(56, 43).addBox(-1.0F, -1.0F, -1.0F, 1.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.7F, 1.525F, 1.7F, -0.2233F, -0.2129F, 0.0479F));
+
+		PartDefinition tailfeather12_r1 = Tail.addOrReplaceChild("tailfeather12_r1", CubeListBuilder.create().texOffs(56, 38).addBox(-1.0F, -1.0F, -1.0F, 1.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(1.5F, 1.525F, 1.4F, -0.1327F, 0.1278F, -0.0285F));
+
+		PartDefinition tailfeather11_r1 = Tail.addOrReplaceChild("tailfeather11_r1", CubeListBuilder.create().texOffs(0, 62).addBox(-1.0F, -1.0F, -1.0F, 1.0F, 1.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(2.6F, 1.525F, 1.4F, -0.257F, 0.5522F, -0.137F));
+
+		PartDefinition tailfeather10_r1 = Tail.addOrReplaceChild("tailfeather10_r1", CubeListBuilder.create().texOffs(18, 61).addBox(-1.0F, -1.0F, -1.0F, 1.0F, 1.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(2.6F, -0.775F, 1.4F, 0.2399F, 0.4253F, 0.1006F));
+
+		PartDefinition tailfeather9_r1 = Tail.addOrReplaceChild("tailfeather9_r1", CubeListBuilder.create().texOffs(20, 56).addBox(-1.0F, -1.0F, -1.0F, 1.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(1.5F, -0.775F, 1.4F, 0.2233F, 0.2129F, 0.0479F));
+
+		PartDefinition tailfeather8_r1 = Tail.addOrReplaceChild("tailfeather8_r1", CubeListBuilder.create().texOffs(36, 55).addBox(-1.0F, -1.0F, -1.0F, 1.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.7F, -0.775F, 1.7F, 0.1797F, -0.2129F, -0.0479F));
+
+		PartDefinition tailfeather7_r1 = Tail.addOrReplaceChild("tailfeather7_r1", CubeListBuilder.create().texOffs(10, 55).addBox(-1.0F, -1.0F, -1.0F, 1.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.4F, -0.775F, 1.7F, 0.3494F, 0.041F, 0.0149F));
+
+		PartDefinition tailfeather6_r1 = Tail.addOrReplaceChild("tailfeather6_r1", CubeListBuilder.create().texOffs(60, 53).addBox(-1.0F, -1.0F, -1.0F, 1.0F, 1.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-1.7F, -0.775F, 1.4F, 0.3708F, -0.4253F, -0.1006F));
+
+		PartDefinition tailfeather5_r1 = Tail.addOrReplaceChild("tailfeather5_r1", CubeListBuilder.create().texOffs(38, 60).addBox(-1.0F, -1.0F, -1.0F, 1.0F, 1.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-1.7F, 0.4F, 1.4F, 0.0F, -0.4363F, 0.0F));
+
+		PartDefinition tailfeather3_r1 = Tail.addOrReplaceChild("tailfeather3_r1", CubeListBuilder.create().texOffs(50, 53).addBox(-1.0F, -1.0F, -1.0F, 1.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.4F, 0.4F, 1.7F, 0.1745F, 0.0F, 0.0F));
+
+		PartDefinition tailfeather4_r1 = Tail.addOrReplaceChild("tailfeather4_r1", CubeListBuilder.create().texOffs(54, 48).addBox(-1.0F, -1.0F, -1.0F, 1.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.7F, 0.4F, 1.7F, -0.0873F, -0.2182F, 0.0F));
+
+		PartDefinition tailfeather2_r1 = Tail.addOrReplaceChild("tailfeather2_r1", CubeListBuilder.create().texOffs(0, 52).addBox(-1.0F, -1.0F, -1.0F, 1.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(1.5F, 0.4F, 1.4F, 0.1309F, 0.2182F, 0.0F));
+
+		PartDefinition tailfeather1_r1 = Tail.addOrReplaceChild("tailfeather1_r1", CubeListBuilder.create().texOffs(30, 60).addBox(-1.0F, -1.0F, -1.0F, 1.0F, 1.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(2.6F, 0.4F, 1.4F, -0.0873F, 0.3491F, 0.0F));
+
+		PartDefinition Wings = Torso.addOrReplaceChild("Wings", CubeListBuilder.create(), PartPose.offset(0.0F, -1.0F, 0.0F));
+
+		PartDefinition LeftWing = Wings.addOrReplaceChild("LeftWing", CubeListBuilder.create(), PartPose.offsetAndRotation(3.0F, 0.0F, -1.0F, 0.0F, 0.0873F, 0.0F));
+
+		PartDefinition Base = LeftWing.addOrReplaceChild("Base", CubeListBuilder.create().texOffs(0, 15).addBox(-1.0F, 0.0F, -3.0F, 11.0F, 1.0F, 6.0F, new CubeDeformation(0.0F))
+		.texOffs(34, 7).addBox(-1.0F, -0.5F, -2.0F, 11.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(-0.1553F, 0.0F, 0.5566F));
+
+		PartDefinition Middle = LeftWing.addOrReplaceChild("Middle", CubeListBuilder.create(), PartPose.offset(9.8447F, 0.0F, 0.5566F));
+
+		PartDefinition wingtop_r1 = Middle.addOrReplaceChild("wingtop_r1", CubeListBuilder.create().texOffs(34, 17).addBox(-1.0F, -2.0F, -3.0F, 9.0F, 1.0F, 4.0F, new CubeDeformation(0.0F))
+		.texOffs(28, 29).addBox(-1.0F, -1.5F, -4.0F, 9.0F, 1.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.3F, 1.5F, 1.125F, 0.0F, -0.1745F, 0.0F));
+
+		PartDefinition End = LeftWing.addOrReplaceChild("End", CubeListBuilder.create(), PartPose.offset(17.8447F, 0.0F, 1.5566F));
+
+		PartDefinition wingendtop2_r1 = End.addOrReplaceChild("wingendtop2_r1", CubeListBuilder.create().texOffs(42, 48).addBox(-1.0F, -2.0F, -1.0F, 2.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(2.95F, 1.4F, 0.2F, 0.0F, -0.5236F, 0.0F));
+
+		PartDefinition wingendtop_r1 = End.addOrReplaceChild("wingendtop_r1", CubeListBuilder.create().texOffs(0, 47).addBox(-1.0F, -2.0F, -1.0F, 2.0F, 1.0F, 4.0F, new CubeDeformation(0.0F))
+		.texOffs(28, 36).addBox(-1.0F, -1.4F, -2.0F, 2.0F, 1.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(1.45F, 1.4F, -0.3F, 0.0F, -0.1745F, 0.0F));
+
+		PartDefinition LFeather1 = End.addOrReplaceChild("LFeather1", CubeListBuilder.create(), PartPose.offset(3.0F, 0.0F, -2.0F));
+
+		PartDefinition wingend1_r1 = LFeather1.addOrReplaceChild("wingend1_r1", CubeListBuilder.create().texOffs(34, 27).addBox(-1.0F, -2.0F, -2.0F, 7.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.375F, 2.0F, 2.125F, 0.0F, -0.5236F, 0.0F));
+
+		PartDefinition LFeather2 = End.addOrReplaceChild("LFeather2", CubeListBuilder.create(), PartPose.offset(2.5F, 0.0F, -1.0F));
+
+		PartDefinition wingend2_r1 = LFeather2.addOrReplaceChild("wingend2_r1", CubeListBuilder.create().texOffs(36, 53).addBox(-1.0F, -2.0F, -2.0F, 6.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.175F, 2.0F, 1.675F, 0.0F, -0.6109F, 0.0F));
+
+		PartDefinition LFeather3 = End.addOrReplaceChild("LFeather3", CubeListBuilder.create(), PartPose.offset(3.0F, 0.0F, 0.5F));
+
+		PartDefinition wingend3_r1 = LFeather3.addOrReplaceChild("wingend3_r1", CubeListBuilder.create().texOffs(16, 40).addBox(-1.0F, -2.0F, -2.0F, 5.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-1.075F, 2.0F, 1.025F, 0.0F, -0.6545F, 0.0F));
+
+		PartDefinition LFeather4 = End.addOrReplaceChild("LFeather4", CubeListBuilder.create(), PartPose.offset(3.0F, 0.0F, 1.7F));
+
+		PartDefinition wingend4_r1 = LFeather4.addOrReplaceChild("wingend4_r1", CubeListBuilder.create().texOffs(60, 21).addBox(-1.0F, -2.0F, -2.0F, 4.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-1.325F, 2.0F, 0.825F, 0.0F, -0.7418F, 0.0F));
+
+		PartDefinition LFeather5 = End.addOrReplaceChild("LFeather5", CubeListBuilder.create(), PartPose.offset(2.5F, 0.0F, 2.4F));
+
+		PartDefinition wingend5_r1 = LFeather5.addOrReplaceChild("wingend5_r1", CubeListBuilder.create().texOffs(60, 25).addBox(-1.0F, -2.0F, -2.0F, 3.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-1.275F, 2.0F, 0.675F, 0.0F, -0.9599F, 0.0F));
+
+		PartDefinition LFeather6 = End.addOrReplaceChild("LFeather6", CubeListBuilder.create(), PartPose.offset(2.0F, 0.0F, 2.0F));
+
+		PartDefinition wingend6_r1 = LFeather6.addOrReplaceChild("wingend6_r1", CubeListBuilder.create().texOffs(64, 12).addBox(-1.0F, -2.0F, -2.0F, 2.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-1.475F, 2.0F, 1.125F, 0.0F, -1.309F, 0.0F));
+
+		PartDefinition RightWing = Wings.addOrReplaceChild("RightWing", CubeListBuilder.create(), PartPose.offsetAndRotation(-3.0F, 0.0F, -1.0F, 0.0F, 0.0873F, -3.1416F));
+
+		PartDefinition Base2 = RightWing.addOrReplaceChild("Base2", CubeListBuilder.create().texOffs(0, 22).addBox(-1.0F, -1.0F, -2.0F, 11.0F, 1.0F, 6.0F, new CubeDeformation(0.0F))
+		.texOffs(34, 12).addBox(-1.0F, -0.4F, -1.0F, 11.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(-0.0681F, 0.0F, -0.4396F));
+
+		PartDefinition Middle2 = RightWing.addOrReplaceChild("Middle2", CubeListBuilder.create(), PartPose.offset(9.9319F, 0.0F, 0.5604F));
+
+		PartDefinition wingmiddle_r1 = Middle2.addOrReplaceChild("wingmiddle_r1", CubeListBuilder.create().texOffs(34, 22).addBox(-1.0F, -2.0F, -3.0F, 9.0F, 1.0F, 4.0F, new CubeDeformation(0.0F))
+		.texOffs(34, 0).addBox(-1.0F, -2.5F, -4.0F, 9.0F, 1.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.3F, 1.5F, 1.125F, 0.0F, -0.1745F, 0.0F));
+
+		PartDefinition End2 = RightWing.addOrReplaceChild("End2", CubeListBuilder.create(), PartPose.offset(18.9319F, 0.0F, 1.5604F));
+
+		PartDefinition wingendtop3_r1 = End2.addOrReplaceChild("wingendtop3_r1", CubeListBuilder.create().texOffs(24, 51).addBox(-1.0F, -2.0F, -1.0F, 2.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(1.95F, 1.5F, 0.2F, 0.0F, -0.5236F, 0.0F));
+
+		PartDefinition wingendtop_r2 = End2.addOrReplaceChild("wingendtop_r2", CubeListBuilder.create().texOffs(12, 50).addBox(-1.0F, -2.0F, -1.0F, 2.0F, 1.0F, 4.0F, new CubeDeformation(0.0F))
+		.texOffs(0, 40).addBox(-1.0F, -2.5F, -2.0F, 2.0F, 1.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.45F, 1.5F, -0.3F, 0.0F, -0.1745F, 0.0F));
+
+		PartDefinition RFeather1 = End2.addOrReplaceChild("RFeather1", CubeListBuilder.create(), PartPose.offset(1.7F, 0.0F, -2.0F));
+
+		PartDefinition wingend1_r2 = RFeather1.addOrReplaceChild("wingend1_r2", CubeListBuilder.create().texOffs(44, 36).addBox(-1.0F, -2.0F, -2.0F, 7.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.075F, 1.0F, 2.125F, 0.0F, -0.5236F, 0.0F));
+
+		PartDefinition RFeather2 = End2.addOrReplaceChild("RFeather2", CubeListBuilder.create(), PartPose.offset(1.5F, 0.0F, -1.0F));
+
+		PartDefinition wingend2_r2 = RFeather2.addOrReplaceChild("wingend2_r2", CubeListBuilder.create().texOffs(50, 27).addBox(-1.0F, -2.0F, -2.0F, 6.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.175F, 1.0F, 1.675F, 0.0F, -0.6109F, 0.0F));
+
+		PartDefinition RFeather3 = End2.addOrReplaceChild("RFeather3", CubeListBuilder.create(), PartPose.offset(0.7F, 0.0F, 0.0F));
+
+		PartDefinition wingend3_r2 = RFeather3.addOrReplaceChild("wingend3_r2", CubeListBuilder.create().texOffs(58, 34).addBox(-1.0F, -2.0F, -2.0F, 5.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.225F, 1.0F, 1.525F, 0.0F, -0.6545F, 0.0F));
+
+		PartDefinition RFeather4 = End2.addOrReplaceChild("RFeather4", CubeListBuilder.create(), PartPose.offset(1.1F, 0.0F, 1.1F));
+
+		PartDefinition wingend4_r2 = RFeather4.addOrReplaceChild("wingend4_r2", CubeListBuilder.create().texOffs(60, 23).addBox(-1.0F, -2.0F, -2.0F, 4.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.425F, 1.0F, 1.425F, 0.0F, -0.7418F, 0.0F));
+
+		PartDefinition RFeather5 = End2.addOrReplaceChild("RFeather5", CubeListBuilder.create(), PartPose.offset(0.5F, 0.0F, 1.3F));
+
+		PartDefinition wingend5_r2 = RFeather5.addOrReplaceChild("wingend5_r2", CubeListBuilder.create().texOffs(60, 36).addBox(-1.0F, -2.0F, -2.0F, 3.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.275F, 1.0F, 1.775F, 0.0F, -0.9599F, 0.0F));
+
+		PartDefinition RFeather6 = End2.addOrReplaceChild("RFeather6", CubeListBuilder.create(), PartPose.offset(0.4F, 0.0F, 2.0F));
+
+		PartDefinition wingend6_r2 = RFeather6.addOrReplaceChild("wingend6_r2", CubeListBuilder.create().texOffs(64, 14).addBox(-1.0F, -2.0F, -2.0F, 2.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.875F, 1.0F, 1.125F, 0.0F, -1.309F, 0.0F));
+
+		PartDefinition Legs = Body.addOrReplaceChild("Legs", CubeListBuilder.create(), PartPose.offset(0.0F, 4.0F, 1.0F));
+
+		PartDefinition LegRight = Legs.addOrReplaceChild("LegRight", CubeListBuilder.create().texOffs(26, 61).addBox(-0.5F, 0.0F, -0.5F, 1.0F, 5.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(-2.5F, 0.0F, 0.0F));
+
+		PartDefinition FootRight = LegRight.addOrReplaceChild("FootRight", CubeListBuilder.create().texOffs(10, 60).addBox(-0.5F, -0.5F, -3.0F, 1.0F, 1.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 4.5F, 0.0F));
+
+		PartDefinition webbing_r1 = FootRight.addOrReplaceChild("webbing_r1", CubeListBuilder.create().texOffs(62, 62).addBox(-1.0F, 0.0F, -1.0F, 1.0F, 0.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.5F, 0.45F, -0.9F, 0.0F, -1.5708F, 0.0F));
+
+		PartDefinition toeright_r1 = FootRight.addOrReplaceChild("toeright_r1", CubeListBuilder.create().texOffs(64, 6).addBox(-1.0F, -1.0F, -1.0F, 1.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(1.325F, 0.5F, -0.575F, 0.0F, -0.9599F, 0.0F));
+
+		PartDefinition toeright_r2 = FootRight.addOrReplaceChild("toeright_r2", CubeListBuilder.create().texOffs(30, 56).addBox(-1.0F, -1.0F, -1.0F, 1.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.75F, 0.5F, -1.4F, 0.0F, 0.9599F, 0.0F));
+
+		PartDefinition LegLeft = Legs.addOrReplaceChild("LegLeft", CubeListBuilder.create().texOffs(64, 0).addBox(-0.5F, 0.0F, -0.5F, 1.0F, 5.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(2.5F, 0.0F, 0.0F));
+
+		PartDefinition FootLeft = LegLeft.addOrReplaceChild("FootLeft", CubeListBuilder.create().texOffs(60, 17).addBox(-0.5F, -0.5F, -3.0F, 1.0F, 1.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 4.5F, 0.0F));
+
+		PartDefinition webbing_r2 = FootLeft.addOrReplaceChild("webbing_r2", CubeListBuilder.create().texOffs(54, 62).addBox(-1.0F, 0.0F, -1.0F, 1.0F, 0.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.5F, 0.45F, -0.9F, 0.0F, -1.5708F, 0.0F));
+
+		PartDefinition toeleft_r1 = FootLeft.addOrReplaceChild("toeleft_r1", CubeListBuilder.create().texOffs(64, 9).addBox(-1.0F, -1.0F, -1.0F, 1.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(1.325F, 0.5F, -0.575F, 0.0F, -0.9599F, 0.0F));
+
+		PartDefinition toeright_r3 = FootLeft.addOrReplaceChild("toeright_r3", CubeListBuilder.create().texOffs(8, 64).addBox(-1.0F, -1.0F, -1.0F, 1.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.75F, 0.5F, -1.4F, 0.0F, 0.9599F, 0.0F));
+
+		return LayerDefinition.create(meshdefinition, 128, 128);
+	}
+
+	@Override
+	public void setupAnim(ToroaEntityRenderState state) {
+		super.setupAnim(state);
+	}
+}

@@ -1,0 +1,220 @@
+package com.miller.wildlifemod.client.model;
+
+import com.miller.wildlifemod.client.entity.state.PiwakawakaEntityRenderState;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.resources.Identifier;
+
+public class PiwakawakaModel extends EntityModel<PiwakawakaEntityRenderState> {
+	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(Identifier.fromNamespaceAndPath("wildlifemod", "piwakawakamodel"), "main");
+	private final ModelPart Piwakawaka;
+	private final ModelPart Body;
+	private final ModelPart Head;
+	private final ModelPart Eyes;
+	private final ModelPart Beak;
+	private final ModelPart BeakBottom;
+	private final ModelPart Torso;
+	private final ModelPart Wings;
+	private final ModelPart LeftWing;
+	private final ModelPart LWingFeather1;
+	private final ModelPart LWingFeather2;
+	private final ModelPart LWingFeather3;
+	private final ModelPart LWingFeather4;
+	private final ModelPart LWingFeather5;
+	private final ModelPart LWingFeather6;
+	private final ModelPart RightWing;
+	private final ModelPart RWingFeather1;
+	private final ModelPart RWingFeather2;
+	private final ModelPart RWingFeather3;
+	private final ModelPart RWingFeather4;
+	private final ModelPart RWingFeather5;
+	private final ModelPart RWingFeather6;
+	private final ModelPart Tail;
+	private final ModelPart TailFeather1;
+	private final ModelPart TailFeather2;
+	private final ModelPart TailFeather3;
+	private final ModelPart TailFeather4;
+	private final ModelPart TailFeather5;
+	private final ModelPart TailFeather6;
+	private final ModelPart TailFeather7;
+	private final ModelPart TailFeather8;
+	private final ModelPart TailFeather9;
+	private final ModelPart Legs;
+	private final ModelPart LeftLeg;
+	private final ModelPart RightLeg;
+
+	public PiwakawakaModel(ModelPart root) {
+        super(root);
+        this.Piwakawaka = root.getChild("Piwakawaka");
+		this.Body = this.Piwakawaka.getChild("Body");
+		this.Head = this.Body.getChild("Head");
+		this.Eyes = this.Head.getChild("Eyes");
+		this.Beak = this.Head.getChild("Beak");
+		this.BeakBottom = this.Beak.getChild("BeakBottom");
+		this.Torso = this.Body.getChild("Torso");
+		this.Wings = this.Torso.getChild("Wings");
+		this.LeftWing = this.Wings.getChild("LeftWing");
+		this.LWingFeather1 = this.LeftWing.getChild("LWingFeather1");
+		this.LWingFeather2 = this.LeftWing.getChild("LWingFeather2");
+		this.LWingFeather3 = this.LeftWing.getChild("LWingFeather3");
+		this.LWingFeather4 = this.LeftWing.getChild("LWingFeather4");
+		this.LWingFeather5 = this.LeftWing.getChild("LWingFeather5");
+		this.LWingFeather6 = this.LeftWing.getChild("LWingFeather6");
+		this.RightWing = this.Wings.getChild("RightWing");
+		this.RWingFeather1 = this.RightWing.getChild("RWingFeather1");
+		this.RWingFeather2 = this.RightWing.getChild("RWingFeather2");
+		this.RWingFeather3 = this.RightWing.getChild("RWingFeather3");
+		this.RWingFeather4 = this.RightWing.getChild("RWingFeather4");
+		this.RWingFeather5 = this.RightWing.getChild("RWingFeather5");
+		this.RWingFeather6 = this.RightWing.getChild("RWingFeather6");
+		this.Tail = this.Torso.getChild("Tail");
+		this.TailFeather1 = this.Tail.getChild("TailFeather1");
+		this.TailFeather2 = this.Tail.getChild("TailFeather2");
+		this.TailFeather3 = this.Tail.getChild("TailFeather3");
+		this.TailFeather4 = this.Tail.getChild("TailFeather4");
+		this.TailFeather5 = this.Tail.getChild("TailFeather5");
+		this.TailFeather6 = this.Tail.getChild("TailFeather6");
+		this.TailFeather7 = this.Tail.getChild("TailFeather7");
+		this.TailFeather8 = this.Tail.getChild("TailFeather8");
+		this.TailFeather9 = this.Tail.getChild("TailFeather9");
+		this.Legs = this.Body.getChild("Legs");
+		this.LeftLeg = this.Legs.getChild("LeftLeg");
+		this.RightLeg = this.Legs.getChild("RightLeg");
+	}
+
+	public static LayerDefinition createBodyLayer() {
+		MeshDefinition meshdefinition = new MeshDefinition();
+		PartDefinition partdefinition = meshdefinition.getRoot();
+
+		PartDefinition Piwakawaka = partdefinition.addOrReplaceChild("Piwakawaka", CubeListBuilder.create(), PartPose.offset(0.0F, 21.0F, 0.0F));
+
+		PartDefinition Body = Piwakawaka.addOrReplaceChild("Body", CubeListBuilder.create(), PartPose.offset(0.0F, 3.0F, 0.0F));
+
+		PartDefinition Head = Body.addOrReplaceChild("Head", CubeListBuilder.create().texOffs(14, 14).addBox(-1.5F, -2.5F, -2.5F, 3.0F, 3.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -4.0F, -1.5F));
+
+		PartDefinition Eyes = Head.addOrReplaceChild("Eyes", CubeListBuilder.create().texOffs(22, 25).addBox(-1.6F, -0.5F, -0.5F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F))
+		.texOffs(26, 14).addBox(0.6F, -0.5F, -0.5F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -1.3F, -1.7F));
+
+		PartDefinition Beak = Head.addOrReplaceChild("Beak", CubeListBuilder.create().texOffs(22, 27).addBox(-0.5F, -0.5F, -1.0F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -1.0F, -2.5F));
+
+		PartDefinition BeakBottom = Beak.addOrReplaceChild("BeakBottom", CubeListBuilder.create().texOffs(28, 12).addBox(-0.5F, 0.0F, -1.0F, 1.0F, 0.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.5F, 0.0F));
+
+		PartDefinition Torso = Body.addOrReplaceChild("Torso", CubeListBuilder.create().texOffs(0, 8).addBox(-2.0F, 1.0F, -2.0F, 4.0F, 1.0F, 5.0F, new CubeDeformation(0.0F))
+		.texOffs(0, 0).addBox(-2.0F, -1.0F, -2.0F, 4.0F, 2.0F, 6.0F, new CubeDeformation(0.0F))
+		.texOffs(18, 8).addBox(-2.2F, -0.5F, -1.5F, 1.0F, 2.0F, 4.0F, new CubeDeformation(0.0F))
+		.texOffs(28, 8).addBox(-2.2F, -0.5F, 2.5F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F))
+		.texOffs(0, 19).addBox(1.2F, -0.5F, -1.5F, 1.0F, 2.0F, 4.0F, new CubeDeformation(0.0F))
+		.texOffs(28, 10).addBox(1.2F, -0.5F, 2.5F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F))
+		.texOffs(0, 14).addBox(-1.5F, -1.3F, -0.5F, 3.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -4.0F, 0.0F));
+
+		PartDefinition Wings = Torso.addOrReplaceChild("Wings", CubeListBuilder.create(), PartPose.offset(0.0F, -0.8F, 0.0F));
+
+		PartDefinition LeftWing = Wings.addOrReplaceChild("LeftWing", CubeListBuilder.create().texOffs(20, 5).addBox(-1.9F, 0.0F, -0.1F, 2.0F, 0.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(2.1F, 0.0F, -1.9F, 0.0F, 0.0F, -3.1416F));
+
+		PartDefinition LWingFeather1 = LeftWing.addOrReplaceChild("LWingFeather1", CubeListBuilder.create(), PartPose.offset(0.1F, 0.0F, 0.2F));
+
+		PartDefinition wingfeather1_r1 = LWingFeather1.addOrReplaceChild("wingfeather1_r1", CubeListBuilder.create().texOffs(10, 20).addBox(-2.0F, -1.0F, -1.0F, 5.0F, 0.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-3.0F, 1.0F, 0.6F, 0.0F, -0.1309F, 0.0F));
+
+		PartDefinition LWingFeather2 = LeftWing.addOrReplaceChild("LWingFeather2", CubeListBuilder.create(), PartPose.offset(0.1F, 0.0F, 0.1F));
+
+		PartDefinition wingfeather2_r1 = LWingFeather2.addOrReplaceChild("wingfeather2_r1", CubeListBuilder.create().texOffs(10, 21).addBox(-2.0F, -1.0F, -1.0F, 5.0F, 0.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-2.7F, 1.0F, 1.5F, 0.0F, 0.2182F, 0.0F));
+
+		PartDefinition LWingFeather3 = LeftWing.addOrReplaceChild("LWingFeather3", CubeListBuilder.create(), PartPose.offset(0.1F, 0.0F, 0.2F));
+
+		PartDefinition wingfeather3_r1 = LWingFeather3.addOrReplaceChild("wingfeather3_r1", CubeListBuilder.create().texOffs(10, 22).addBox(-2.0F, -1.0F, -1.0F, 5.0F, 0.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-2.0F, 1.0F, 2.1F, 0.0F, 0.5236F, 0.0F));
+
+		PartDefinition LWingFeather4 = LeftWing.addOrReplaceChild("LWingFeather4", CubeListBuilder.create(), PartPose.offset(0.1F, 0.0F, 1.2F));
+
+		PartDefinition wingfeather4_r1 = LWingFeather4.addOrReplaceChild("wingfeather4_r1", CubeListBuilder.create().texOffs(20, 23).addBox(-2.0F, -1.0F, -1.0F, 4.0F, 0.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-1.2F, 1.0F, 1.5F, 0.0F, 0.8727F, 0.0F));
+
+		PartDefinition LWingFeather5 = LeftWing.addOrReplaceChild("LWingFeather5", CubeListBuilder.create(), PartPose.offset(0.1F, 0.0F, 1.1F));
+
+		PartDefinition wingfeather5_r1 = LWingFeather5.addOrReplaceChild("wingfeather5_r1", CubeListBuilder.create().texOffs(10, 24).addBox(-2.0F, -1.0F, -1.0F, 4.0F, 0.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.5F, 1.0F, 1.6F, 0.0F, 1.2217F, 0.0F));
+
+		PartDefinition LWingFeather6 = LeftWing.addOrReplaceChild("LWingFeather6", CubeListBuilder.create(), PartPose.offset(0.1F, 0.0F, 0.8F));
+
+		PartDefinition wingfeather6_r1 = LWingFeather6.addOrReplaceChild("wingfeather6_r1", CubeListBuilder.create().texOffs(20, 24).addBox(-2.0F, -1.0F, -1.0F, 4.0F, 0.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 1.0F, 1.9F, 0.0F, 1.5708F, 0.0F));
+
+		PartDefinition RightWing = Wings.addOrReplaceChild("RightWing", CubeListBuilder.create().texOffs(20, 0).addBox(-1.9F, 0.0F, -0.2F, 2.0F, 0.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offset(-2.1F, 0.0F, -1.8F));
+
+		PartDefinition RWingFeather1 = RightWing.addOrReplaceChild("RWingFeather1", CubeListBuilder.create(), PartPose.offset(0.1F, 0.0F, 0.1F));
+
+		PartDefinition wingfeather1_r2 = RWingFeather1.addOrReplaceChild("wingfeather1_r2", CubeListBuilder.create().texOffs(20, 3).addBox(-2.0F, -1.0F, -1.0F, 5.0F, 0.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-3.0F, 1.0F, 0.6F, 0.0F, -0.1309F, 0.0F));
+
+		PartDefinition RWingFeather2 = RightWing.addOrReplaceChild("RWingFeather2", CubeListBuilder.create(), PartPose.offset(0.1F, 0.0F, 0.0F));
+
+		PartDefinition wingfeather2_r2 = RWingFeather2.addOrReplaceChild("wingfeather2_r2", CubeListBuilder.create().texOffs(20, 4).addBox(-2.0F, -1.0F, -1.0F, 5.0F, 0.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-2.7F, 1.0F, 1.5F, 0.0F, 0.2182F, 0.0F));
+
+		PartDefinition RWingFeather3 = RightWing.addOrReplaceChild("RWingFeather3", CubeListBuilder.create(), PartPose.offset(-0.2F, 0.0F, 1.2F));
+
+		PartDefinition wingfeather3_r2 = RWingFeather3.addOrReplaceChild("wingfeather3_r2", CubeListBuilder.create().texOffs(22, 20).addBox(-2.0F, -1.0F, -1.0F, 4.0F, 0.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-1.7F, 1.0F, 1.0F, 0.0F, 0.5236F, 0.0F));
+
+		PartDefinition RWingFeather4 = RightWing.addOrReplaceChild("RWingFeather4", CubeListBuilder.create(), PartPose.offset(0.1F, 0.0F, 1.1F));
+
+		PartDefinition wingfeather4_r2 = RWingFeather4.addOrReplaceChild("wingfeather4_r2", CubeListBuilder.create().texOffs(22, 21).addBox(-2.0F, -1.0F, -1.0F, 4.0F, 0.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-1.2F, 1.0F, 1.5F, 0.0F, 0.8727F, 0.0F));
+
+		PartDefinition RWingFeather5 = RightWing.addOrReplaceChild("RWingFeather5", CubeListBuilder.create(), PartPose.offset(0.1F, 0.0F, 0.8F));
+
+		PartDefinition wingfeather5_r2 = RWingFeather5.addOrReplaceChild("wingfeather5_r2", CubeListBuilder.create().texOffs(22, 22).addBox(-2.0F, -1.0F, -1.0F, 4.0F, 0.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.5F, 1.0F, 1.8F, 0.0F, 1.2217F, 0.0F));
+
+		PartDefinition RWingFeather6 = RightWing.addOrReplaceChild("RWingFeather6", CubeListBuilder.create(), PartPose.offset(0.1F, 0.0F, 0.7F));
+
+		PartDefinition wingfeather6_r2 = RWingFeather6.addOrReplaceChild("wingfeather6_r2", CubeListBuilder.create().texOffs(10, 23).addBox(-2.0F, -1.0F, -1.0F, 4.0F, 0.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 1.0F, 1.9F, 0.0F, 1.5708F, 0.0F));
+
+		PartDefinition Tail = Torso.addOrReplaceChild("Tail", CubeListBuilder.create(), PartPose.offset(0.0F, 5.0F, 0.0F));
+
+		PartDefinition TailFeather1 = Tail.addOrReplaceChild("TailFeather1", CubeListBuilder.create(), PartPose.offset(0.0F, -6.0F, 4.0F));
+
+		PartDefinition tailfeather1_r1 = TailFeather1.addOrReplaceChild("tailfeather1_r1", CubeListBuilder.create().texOffs(26, 25).addBox(-1.0F, -4.0F, -1.0F, 1.0F, 4.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-1.1F, 0.1F, 0.9F, -0.2182F, 0.0F, -0.7854F));
+
+		PartDefinition TailFeather2 = Tail.addOrReplaceChild("TailFeather2", CubeListBuilder.create(), PartPose.offset(0.0F, -6.0F, 4.0F));
+
+		PartDefinition tailfeather2_r1 = TailFeather2.addOrReplaceChild("tailfeather2_r1", CubeListBuilder.create().texOffs(10, 25).addBox(-1.0F, -6.0F, -1.0F, 1.0F, 6.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.1F, 0.5F, 0.8F, -0.2182F, 0.0F, -0.384F));
+
+		PartDefinition TailFeather3 = Tail.addOrReplaceChild("TailFeather3", CubeListBuilder.create(), PartPose.offset(0.0F, -6.0F, 4.0F));
+
+		PartDefinition tailfeather3_r1 = TailFeather3.addOrReplaceChild("tailfeather3_r1", CubeListBuilder.create().texOffs(8, 25).addBox(-1.0F, -4.8F, -1.0F, 1.0F, 6.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.6F, -0.1F, 1.0F, -0.2182F, 0.0F, -0.6109F));
+
+		PartDefinition TailFeather4 = Tail.addOrReplaceChild("TailFeather4", CubeListBuilder.create(), PartPose.offset(0.0F, -6.0F, 4.0F));
+
+		PartDefinition tailfeather4_r1 = TailFeather4.addOrReplaceChild("tailfeather4_r1", CubeListBuilder.create().texOffs(4, 25).addBox(-1.0F, -7.0F, -1.0F, 1.0F, 7.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.1F, 1.2F, 0.8F, -0.2182F, 0.0F, -0.1571F));
+
+		PartDefinition TailFeather5 = Tail.addOrReplaceChild("TailFeather5", CubeListBuilder.create(), PartPose.offset(0.0F, -6.0F, 4.0F));
+
+		PartDefinition tailfeather5_r1 = TailFeather5.addOrReplaceChild("tailfeather5_r1", CubeListBuilder.create().texOffs(2, 25).addBox(-1.0F, -7.0F, -1.0F, 1.0F, 7.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.4F, 0.8F, 0.8F, -0.2182F, 0.0F, 0.0F));
+
+		PartDefinition TailFeather6 = Tail.addOrReplaceChild("TailFeather6", CubeListBuilder.create(), PartPose.offset(0.0F, -6.0F, 4.0F));
+
+		PartDefinition tailfeather6_r1 = TailFeather6.addOrReplaceChild("tailfeather6_r1", CubeListBuilder.create().texOffs(6, 25).addBox(-2.2F, -5.0F, -1.0F, 1.0F, 6.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(2.2F, 0.4F, 1.0F, -0.2182F, 0.0F, 0.384F));
+
+		PartDefinition TailFeather7 = Tail.addOrReplaceChild("TailFeather7", CubeListBuilder.create(), PartPose.offset(0.0F, -6.0F, 4.0F));
+
+		PartDefinition tailfeather7_r1 = TailFeather7.addOrReplaceChild("tailfeather7_r1", CubeListBuilder.create().texOffs(20, 25).addBox(-2.2F, -4.0F, -1.0F, 1.0F, 5.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(2.6F, 0.5F, 1.0F, -0.2182F, 0.0F, 0.6109F));
+
+		PartDefinition TailFeather8 = Tail.addOrReplaceChild("TailFeather8", CubeListBuilder.create(), PartPose.offset(0.0F, -6.0F, 4.0F));
+
+		PartDefinition tailfeather8_r1 = TailFeather8.addOrReplaceChild("tailfeather8_r1", CubeListBuilder.create().texOffs(0, 25).addBox(-2.2F, -6.0F, -1.0F, 1.0F, 7.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(2.0F, 0.6F, 1.0F, -0.2182F, 0.0F, 0.1571F));
+
+		PartDefinition TailFeather9 = Tail.addOrReplaceChild("TailFeather9", CubeListBuilder.create(), PartPose.offset(0.0F, -6.0F, 4.0F));
+
+		PartDefinition tailfeather9_r1 = TailFeather9.addOrReplaceChild("tailfeather9_r1", CubeListBuilder.create().texOffs(26, 16).addBox(-2.2F, -4.0F, -1.0F, 1.0F, 4.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(2.5F, 1.6F, 0.9F, -0.2182F, 0.0F, 0.7854F));
+
+		PartDefinition Legs = Body.addOrReplaceChild("Legs", CubeListBuilder.create(), PartPose.offset(0.0F, -2.0F, 0.5F));
+
+		PartDefinition LeftLeg = Legs.addOrReplaceChild("LeftLeg", CubeListBuilder.create().texOffs(16, 25).addBox(1.0F, -2.0F, 0.0F, 1.0F, 2.0F, 1.0F, new CubeDeformation(0.0F))
+		.texOffs(10, 19).addBox(1.0F, 0.0F, -1.0F, 1.0F, 0.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(-0.2F, 2.0F, -0.5F));
+
+		PartDefinition RightLeg = Legs.addOrReplaceChild("RightLeg", CubeListBuilder.create().texOffs(12, 25).addBox(-2.0F, -2.0F, 0.0F, 1.0F, 2.0F, 1.0F, new CubeDeformation(0.0F))
+		.texOffs(12, 28).addBox(-2.0F, 0.0F, -1.0F, 1.0F, 0.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.2F, 2.0F, -0.5F));
+
+		return LayerDefinition.create(meshdefinition, 32, 32);
+	}
+
+	@Override
+	public void setupAnim(PiwakawakaEntityRenderState state) {
+		super.setupAnim(state);
+	}
+}
