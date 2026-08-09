@@ -45,6 +45,7 @@ public final class ModEntityTypes {
         EntityType<T> type = builder.build(key);
         return Registry.register(BuiltInRegistries.ENTITY_TYPE, id, type);
     }
+
     public static void register() {
 
     }
