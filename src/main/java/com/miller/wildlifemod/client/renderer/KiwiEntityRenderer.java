@@ -11,7 +11,7 @@ import net.minecraft.resources.Identifier;
 
 public class KiwiEntityRenderer extends MobRenderer<KiwiEntity, KiwiEntityRenderState, KiwiModel> {
     private static final Identifier TEXTURE =
-            Identifier.fromNamespaceAndPath(AotearoaWildlife.MOD_ID, "textures/entity/kiwi_texture.png");
+            Identifier.fromNamespaceAndPath(AotearoaWildlife.MOD_ID, "wildlifemod:textures/entity/kiwi_texture.png");
 
     public KiwiEntityRenderer(EntityRendererProvider.Context context) {
         super(context, new KiwiModel(context.bakeLayer(ModEntityModelLayers.KIWI)), 0.3f);

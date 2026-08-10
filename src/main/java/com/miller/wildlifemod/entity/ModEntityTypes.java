@@ -33,7 +33,7 @@ public final class ModEntityTypes {
             EntityType.Builder.of(PiwakawakaEntity::new, MobCategory.CREATURE)
                     .sized(0.35F, 0.35F));
 
-    public static final EntityType<ToroaEntity> ALBATROSS = register(
+    public static final EntityType<ToroaEntity> TOROA = register(
             "albatross",
             EntityType.Builder.of(ToroaEntity::new, MobCategory.CREATURE)
                     .sized(1.4F, 0.9F));

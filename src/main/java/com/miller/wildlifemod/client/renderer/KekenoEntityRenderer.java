@@ -11,7 +11,7 @@ import net.minecraft.resources.Identifier;
 
 public class KekenoEntityRenderer extends MobRenderer<KekenoEntity, KekenoEntityRenderState, KekenoModel> {
     private static final Identifier TEXTURE =
-            Identifier.fromNamespaceAndPath(AotearoaWildlife.MOD_ID, "textures/entity/kekeno_texture.png");
+            Identifier.fromNamespaceAndPath(AotearoaWildlife.MOD_ID, "wildlifemod:textures/entity/kekeno_texture.png");
 
     public KekenoEntityRenderer(EntityRendererProvider.Context context) {
         super(context, new KekenoModel(context.bakeLayer(ModEntityModelLayers.KEKENO)), 0.5f);
