@@ -28,7 +28,7 @@ import java.util.List;
 
 
 public class HoihoEntity extends Animal {
-
+    //created the animation states, so it knows what to use for animations.
     public final AnimationState idleAnimationState = new AnimationState();
     public final AnimationState waddleAnimationState = new AnimationState();
     public final AnimationState celebrateAnimationState = new AnimationState();

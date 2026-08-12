@@ -11,7 +11,7 @@ import net.minecraft.resources.Identifier;
 
 public class ToroaEntityRenderer extends MobRenderer<ToroaEntity, ToroaEntityRenderState, ToroaModel> {
     private static final Identifier TEXTURE =
-            Identifier.fromNamespaceAndPath(AotearoaWildlife.MOD_ID, "wildlifemod:textures/entity/toroa_texture.png");
+            Identifier.fromNamespaceAndPath(AotearoaWildlife.MOD_ID, "wildlifemod/textures/entity/toroa_texture.png");
 
     public ToroaEntityRenderer(EntityRendererProvider.Context context) {
         super(context, new ToroaModel(context.bakeLayer(ModEntityModelLayers.TOROA)), 0.6f);
