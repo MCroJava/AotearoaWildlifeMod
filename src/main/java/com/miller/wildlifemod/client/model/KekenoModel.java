@@ -1,7 +1,9 @@
 package com.miller.wildlifemod.client.model;
 
 
+import com.miller.wildlifemod.client.animation.KekenoAnimations;
 import com.miller.wildlifemod.client.entity.state.KekenoEntityRenderState;
+import net.minecraft.client.animation.KeyframeAnimation;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -29,9 +31,14 @@ public class KekenoModel extends EntityModel<KekenoEntityRenderState> {
 	private final ModelPart Mouth;
 	private final ModelPart BottomMouth;
 
+	private final KeyframeAnimation idle;
+	private final KeyframeAnimation walking;
+	private final KeyframeAnimation running;
+	private final KeyframeAnimation swimming;
+
 	public KekenoModel(ModelPart root) {
-        super(root);
-        this.Kekeno = root.getChild("Kekeno");
+		super(root);
+		this.Kekeno = root.getChild("Kekeno");
 		this.Body = this.Kekeno.getChild("Body");
 		this.Torso = this.Body.getChild("Torso");
 		this.Flippers = this.Torso.getChild("Flippers");
@@ -48,6 +55,11 @@ public class KekenoModel extends EntityModel<KekenoEntityRenderState> {
 		this.Eyes = this.Head.getChild("Eyes");
 		this.Mouth = this.Head.getChild("Mouth");
 		this.BottomMouth = this.Mouth.getChild("BottomMouth");
+
+		this.idle = KekenoAnimations.Idle_Kekeno.bake(root);
+		this.walking = KekenoAnimations.Walking_Kekeno.bake(root);
+		this.running = KekenoAnimations.Running_Kekeno.bake(root);
+		this.swimming = KekenoAnimations.Swimming_Kekeno.bake(root);
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -59,9 +71,9 @@ public class KekenoModel extends EntityModel<KekenoEntityRenderState> {
 		PartDefinition Body = Kekeno.addOrReplaceChild("Body", CubeListBuilder.create(), PartPose.offset(0.0F, -2.0F, -2.0F));
 
 		PartDefinition Torso = Body.addOrReplaceChild("Torso", CubeListBuilder.create().texOffs(0, 0).addBox(-2.4F, -2.0F, -2.0F, 5.0F, 4.0F, 6.0F, new CubeDeformation(0.0F))
-		.texOffs(0, 10).addBox(-1.9F, -2.5F, -2.0F, 4.0F, 1.0F, 5.0F, new CubeDeformation(0.0F))
-		.texOffs(0, 16).addBox(-2.0F, -1.0F, 4.0F, 4.0F, 3.0F, 4.0F, new CubeDeformation(0.0F))
-		.texOffs(18, 10).addBox(-1.5F, -1.6F, 4.0F, 3.0F, 3.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+				.texOffs(0, 10).addBox(-1.9F, -2.5F, -2.0F, 4.0F, 1.0F, 5.0F, new CubeDeformation(0.0F))
+				.texOffs(0, 16).addBox(-2.0F, -1.0F, 4.0F, 4.0F, 3.0F, 4.0F, new CubeDeformation(0.0F))
+				.texOffs(18, 10).addBox(-1.5F, -1.6F, 4.0F, 3.0F, 3.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
 
 		PartDefinition upperneckfront_r1 = Torso.addOrReplaceChild("upperneckfront_r1", CubeListBuilder.create().texOffs(22, 6).addBox(-3.0F, -5.0F, -2.0F, 4.0F, 2.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(1.1F, 0.8F, -1.2F, 0.2618F, 0.0F, 0.0F));
 
@@ -98,12 +110,12 @@ public class KekenoModel extends EntityModel<KekenoEntityRenderState> {
 		PartDefinition upperarm_r2 = UpperL.addOrReplaceChild("upperarm_r2", CubeListBuilder.create().texOffs(0, 27).addBox(-1.0F, -1.0F, -1.0F, 3.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(1.3F, -0.7F, -1.1F, 0.0F, 0.1571F, 0.0F));
 
 		PartDefinition Head = Body.addOrReplaceChild("Head", CubeListBuilder.create().texOffs(22, 0).addBox(-1.4F, -2.5F, -2.325F, 3.0F, 3.0F, 3.0F, new CubeDeformation(0.0F))
-		.texOffs(12, 30).addBox(-0.9F, -2.7F, -1.9F, 2.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -3.0F, -3.0F));
+				.texOffs(12, 30).addBox(-0.9F, -2.7F, -1.9F, 2.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -3.0F, -3.0F));
 
 		PartDefinition Snout = Head.addOrReplaceChild("Snout", CubeListBuilder.create(), PartPose.offset(0.0F, 5.5F, 3.4F));
 
 		PartDefinition Eyes = Head.addOrReplaceChild("Eyes", CubeListBuilder.create().texOffs(10, 23).addBox(-1.5F, -0.8F, -1.1F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F))
-		.texOffs(30, 13).addBox(0.7F, -0.8F, -1.2F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -1.1F, -1.0F));
+				.texOffs(30, 13).addBox(0.7F, -0.8F, -1.2F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -1.1F, -1.0F));
 
 		PartDefinition Mouth = Head.addOrReplaceChild("Mouth", CubeListBuilder.create().texOffs(30, 10).addBox(-0.9F, -0.6F, -1.1F, 2.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -1.2F, -2.3F));
 
@@ -116,5 +128,17 @@ public class KekenoModel extends EntityModel<KekenoEntityRenderState> {
 	@Override
 	public void setupAnim(KekenoEntityRenderState state) {
 		super.setupAnim(state);
+		if (state.idleAnimationState.isStarted()) {
+			this.idle.apply(state.idleAnimationState, state.ageInTicks);
+		}
+		if (state.walkingAnimationState.isStarted()) {
+			this.walking.apply(state.walkingAnimationState, state.ageInTicks);
+		}
+		if (state.runningAnimationState.isStarted()) {
+			this.running.apply(state.runningAnimationState, state.ageInTicks);
+		}
+		if (state.swimmingAnimationState.isStarted()) {
+			this.swimming.apply(state.swimmingAnimationState, state.ageInTicks);
+		}
 	}
 }

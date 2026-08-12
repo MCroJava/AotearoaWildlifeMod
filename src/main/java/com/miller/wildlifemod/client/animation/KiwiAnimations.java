@@ -6,6 +6,8 @@ import net.minecraft.client.animation.Keyframe;
 import net.minecraft.client.animation.KeyframeAnimations;
 
 public class KiwiAnimations {
+
+	//animations class made by BlockBench
 	public static final AnimationDefinition Idle_Kiwi = AnimationDefinition.Builder.withLength(4.0F).looping()
 		.addAnimation("Eyes", new AnimationChannel(AnimationChannel.Targets.SCALE, 
 			new Keyframe(0.5833F, KeyframeAnimations.scaleVec(1.0F, 1.0F, 1.0F), AnimationChannel.Interpolations.LINEAR),

@@ -5,6 +5,7 @@ import net.minecraft.world.entity.AnimationState;
 
 
 public class ToroaEntityRenderState extends LivingEntityRenderState {
+    //creates an animationstate for all the individual animations
     public final AnimationState lowSweepPhase1AnimationState = new AnimationState();
     public final AnimationState ascendPhase2AnimationState = new AnimationState();
     public final AnimationState apexPhase3AnimationState = new AnimationState();

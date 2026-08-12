@@ -9,11 +9,11 @@ public final class ModEntityModelLayers {
 
     private ModEntityModelLayers() {}
 
-    public static final ModelLayerLocation HOIHO = createMain("hoiho");
-    public static final ModelLayerLocation KEKENO = createMain("kekeno");
-    public static final ModelLayerLocation KIWI = createMain("kiwi");
-    public static final ModelLayerLocation PIWAKAWAKA = createMain("piwakawaka");
-    public static final ModelLayerLocation TOROA = createMain("toroa");
+    public static final ModelLayerLocation HOIHO = createMain("hoihomodel");
+    public static final ModelLayerLocation KEKENO = createMain("kekenomodel");
+    public static final ModelLayerLocation KIWI = createMain("kiwimodel");
+    public static final ModelLayerLocation PIWAKAWAKA = createMain("piwakawakamodel");
+    public static final ModelLayerLocation TOROA = createMain("toroamodel");
 
     private static ModelLayerLocation createMain(String name) {
         return new ModelLayerLocation(Identifier.fromNamespaceAndPath(AotearoaWildlife.MOD_ID, name), "main");

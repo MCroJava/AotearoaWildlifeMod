@@ -1,6 +1,8 @@
 package com.miller.wildlifemod.client.model;
 
+import com.miller.wildlifemod.client.animation.KiwiAnimations;
 import com.miller.wildlifemod.client.entity.state.KiwiEntityRenderState;
+import net.minecraft.client.animation.KeyframeAnimation;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -23,9 +25,13 @@ public class KiwiModel extends EntityModel<KiwiEntityRenderState> {
 	private final ModelPart RightLeg;
 	private final ModelPart LeftLeg;
 
+	private final KeyframeAnimation idle;
+	private final KeyframeAnimation walking;
+	private final KeyframeAnimation running;
+
 	public KiwiModel(ModelPart root) {
-        super(root);
-        this.Kiwi = root.getChild("Kiwi");
+		super(root);
+		this.Kiwi = root.getChild("Kiwi");
 		this.Body = this.Kiwi.getChild("Body");
 		this.Head = this.Body.getChild("Head");
 		this.Eyes = this.Head.getChild("Eyes");
@@ -36,6 +42,10 @@ public class KiwiModel extends EntityModel<KiwiEntityRenderState> {
 		this.Legs = this.Body.getChild("Legs");
 		this.RightLeg = this.Legs.getChild("RightLeg");
 		this.LeftLeg = this.Legs.getChild("LeftLeg");
+
+		this.idle = KiwiAnimations.Idle_Kiwi.bake(root);
+		this.walking = KiwiAnimations.Walking_Kiwi.bake(root);
+		this.running = KiwiAnimations.Running_Kiwi.bake(root);
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -47,34 +57,34 @@ public class KiwiModel extends EntityModel<KiwiEntityRenderState> {
 		PartDefinition Body = Kiwi.addOrReplaceChild("Body", CubeListBuilder.create(), PartPose.offset(0.0F, -8.0F, 0.0F));
 
 		PartDefinition Head = Body.addOrReplaceChild("Head", CubeListBuilder.create().texOffs(34, 0).addBox(-2.5F, -4.0F, -4.0F, 5.0F, 5.0F, 5.0F, new CubeDeformation(0.0F))
-		.texOffs(34, 10).addBox(-2.0F, -4.2F, -3.5F, 4.0F, 1.0F, 4.0F, new CubeDeformation(0.0F))
-		.texOffs(18, 40).addBox(-2.7F, -3.5F, -3.5F, 1.0F, 4.0F, 4.0F, new CubeDeformation(0.0F))
-		.texOffs(40, 23).addBox(1.7F, -3.5F, -3.5F, 1.0F, 4.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -3.0F, -3.0F));
+				.texOffs(34, 10).addBox(-2.0F, -4.2F, -3.5F, 4.0F, 1.0F, 4.0F, new CubeDeformation(0.0F))
+				.texOffs(18, 40).addBox(-2.7F, -3.5F, -3.5F, 1.0F, 4.0F, 4.0F, new CubeDeformation(0.0F))
+				.texOffs(40, 23).addBox(1.7F, -3.5F, -3.5F, 1.0F, 4.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -3.0F, -3.0F));
 
 		PartDefinition Eyes = Head.addOrReplaceChild("Eyes", CubeListBuilder.create().texOffs(42, 43).addBox(-2.9F, -0.5F, -0.3F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F))
-		.texOffs(44, 31).addBox(1.9F, -0.5F, -0.3F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -2.5F, -3.0F));
+				.texOffs(44, 31).addBox(1.9F, -0.5F, -0.3F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -2.5F, -3.0F));
 
 		PartDefinition Beak = Head.addOrReplaceChild("Beak", CubeListBuilder.create().texOffs(28, 40).addBox(-0.5F, -1.0F, -4.0F, 1.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -1.0F, -4.0F));
 
 		PartDefinition BeakBottom = Beak.addOrReplaceChild("BeakBottom", CubeListBuilder.create().texOffs(28, 40).addBox(-0.5F, 0.0F, -4.0F, 1.0F, 0.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
 
 		PartDefinition Torso = Body.addOrReplaceChild("Torso", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -3.0F, -4.0F, 8.0F, 7.0F, 9.0F, new CubeDeformation(0.0F))
-		.texOffs(30, 16).addBox(-4.0F, -2.5F, 4.7F, 8.0F, 6.0F, 1.0F, new CubeDeformation(0.0F))
-		.texOffs(0, 25).addBox(3.5F, -2.5F, -4.0F, 1.0F, 6.0F, 9.0F, new CubeDeformation(0.0F))
-		.texOffs(20, 25).addBox(-4.5F, -2.5F, -4.0F, 1.0F, 6.0F, 9.0F, new CubeDeformation(0.0F))
-		.texOffs(0, 16).addBox(-3.5F, -3.5F, -3.5F, 7.0F, 1.0F, 8.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -1.0F, 0.0F));
+				.texOffs(30, 16).addBox(-4.0F, -2.5F, 4.7F, 8.0F, 6.0F, 1.0F, new CubeDeformation(0.0F))
+				.texOffs(0, 25).addBox(3.5F, -2.5F, -4.0F, 1.0F, 6.0F, 9.0F, new CubeDeformation(0.0F))
+				.texOffs(20, 25).addBox(-4.5F, -2.5F, -4.0F, 1.0F, 6.0F, 9.0F, new CubeDeformation(0.0F))
+				.texOffs(0, 16).addBox(-3.5F, -3.5F, -3.5F, 7.0F, 1.0F, 8.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -1.0F, 0.0F));
 
 		PartDefinition Chest = Torso.addOrReplaceChild("Chest", CubeListBuilder.create().texOffs(0, 40).addBox(-4.0F, -6.0F, 0.0F, 8.0F, 6.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 3.5F, -4.5F));
 
 		PartDefinition Legs = Body.addOrReplaceChild("Legs", CubeListBuilder.create(), PartPose.offset(0.0F, 3.0F, 1.5F));
 
 		PartDefinition RightLeg = Legs.addOrReplaceChild("RightLeg", CubeListBuilder.create().texOffs(42, 39).addBox(-0.5F, 4.0F, -2.5F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F))
-		.texOffs(30, 23).addBox(-1.5F, 4.0F, -1.5F, 3.0F, 1.0F, 1.0F, new CubeDeformation(0.0F))
-		.texOffs(40, 31).addBox(-0.5F, 0.0F, -0.5F, 1.0F, 5.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(-2.5F, 0.0F, 0.0F));
+				.texOffs(30, 23).addBox(-1.5F, 4.0F, -1.5F, 3.0F, 1.0F, 1.0F, new CubeDeformation(0.0F))
+				.texOffs(40, 31).addBox(-0.5F, 0.0F, -0.5F, 1.0F, 5.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(-2.5F, 0.0F, 0.0F));
 
 		PartDefinition LeftLeg = Legs.addOrReplaceChild("LeftLeg", CubeListBuilder.create().texOffs(42, 41).addBox(-0.5F, 4.0F, -2.5F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F))
-		.texOffs(40, 37).addBox(-1.5F, 4.0F, -1.5F, 3.0F, 1.0F, 1.0F, new CubeDeformation(0.0F))
-		.texOffs(38, 40).addBox(-0.5F, 0.0F, -0.5F, 1.0F, 5.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(2.5F, 0.0F, 0.0F));
+				.texOffs(40, 37).addBox(-1.5F, 4.0F, -1.5F, 3.0F, 1.0F, 1.0F, new CubeDeformation(0.0F))
+				.texOffs(38, 40).addBox(-0.5F, 0.0F, -0.5F, 1.0F, 5.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(2.5F, 0.0F, 0.0F));
 
 		return LayerDefinition.create(meshdefinition, 64, 64);
 	}
@@ -82,5 +92,14 @@ public class KiwiModel extends EntityModel<KiwiEntityRenderState> {
 	@Override
 	public void setupAnim(KiwiEntityRenderState state) {
 		super.setupAnim(state);
+		if (state.idleAnimationState.isStarted()) {
+			this.idle.apply(state.idleAnimationState, state.ageInTicks);
+		}
+		if (state.walkingAnimationState.isStarted()) {
+			this.walking.apply(state.walkingAnimationState, state.ageInTicks);
+		}
+		if (state.runningAnimationState.isStarted()) {
+			this.running.apply(state.runningAnimationState, state.ageInTicks);
+		}
 	}
 }

@@ -6,6 +6,8 @@ import net.minecraft.client.animation.Keyframe;
 import net.minecraft.client.animation.KeyframeAnimations;
 
 public class ToroaAnimations {
+
+	//animations class made by BlockBench
 	public static final AnimationDefinition Low_Sweep_Phase1_Toroa = AnimationDefinition.Builder.withLength(4.0F).looping()
 		.addAnimation("Body", new AnimationChannel(AnimationChannel.Targets.ROTATION, 
 			new Keyframe(0.0F, KeyframeAnimations.degreeVec(0.0F, 0.0F, -1.8313F), AnimationChannel.Interpolations.LINEAR),

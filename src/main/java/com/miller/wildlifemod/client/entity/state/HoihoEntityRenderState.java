@@ -4,6 +4,7 @@ import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.world.entity.AnimationState;
 
 public class HoihoEntityRenderState extends LivingEntityRenderState {
+    //creates an animationstate for all the individual animations
     public final AnimationState idleAnimationState = new AnimationState();
     public final AnimationState waddleAnimationState = new AnimationState();
     public final AnimationState celebrateAnimationState = new AnimationState();

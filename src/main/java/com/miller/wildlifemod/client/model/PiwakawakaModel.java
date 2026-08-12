@@ -1,6 +1,8 @@
 package com.miller.wildlifemod.client.model;
 
+import com.miller.wildlifemod.client.animation.PiwakawakaAnimations;
 import com.miller.wildlifemod.client.entity.state.PiwakawakaEntityRenderState;
+import net.minecraft.client.animation.KeyframeAnimation;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -46,9 +48,13 @@ public class PiwakawakaModel extends EntityModel<PiwakawakaEntityRenderState> {
 	private final ModelPart LeftLeg;
 	private final ModelPart RightLeg;
 
+	private final KeyframeAnimation idle;
+	private final KeyframeAnimation perched;
+	private final KeyframeAnimation flying;
+
 	public PiwakawakaModel(ModelPart root) {
-        super(root);
-        this.Piwakawaka = root.getChild("Piwakawaka");
+		super(root);
+		this.Piwakawaka = root.getChild("Piwakawaka");
 		this.Body = this.Piwakawaka.getChild("Body");
 		this.Head = this.Body.getChild("Head");
 		this.Eyes = this.Head.getChild("Eyes");
@@ -83,6 +89,10 @@ public class PiwakawakaModel extends EntityModel<PiwakawakaEntityRenderState> {
 		this.Legs = this.Body.getChild("Legs");
 		this.LeftLeg = this.Legs.getChild("LeftLeg");
 		this.RightLeg = this.Legs.getChild("RightLeg");
+
+		this.idle = PiwakawakaAnimations.Idle_Piwakawaka.bake(root);
+		this.perched = PiwakawakaAnimations.Perched_Piwakawaka.bake(root);
+		this.flying = PiwakawakaAnimations.Flying_Piwakawaka.bake(root);
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -96,19 +106,19 @@ public class PiwakawakaModel extends EntityModel<PiwakawakaEntityRenderState> {
 		PartDefinition Head = Body.addOrReplaceChild("Head", CubeListBuilder.create().texOffs(14, 14).addBox(-1.5F, -2.5F, -2.5F, 3.0F, 3.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -4.0F, -1.5F));
 
 		PartDefinition Eyes = Head.addOrReplaceChild("Eyes", CubeListBuilder.create().texOffs(22, 25).addBox(-1.6F, -0.5F, -0.5F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F))
-		.texOffs(26, 14).addBox(0.6F, -0.5F, -0.5F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -1.3F, -1.7F));
+				.texOffs(26, 14).addBox(0.6F, -0.5F, -0.5F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -1.3F, -1.7F));
 
 		PartDefinition Beak = Head.addOrReplaceChild("Beak", CubeListBuilder.create().texOffs(22, 27).addBox(-0.5F, -0.5F, -1.0F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -1.0F, -2.5F));
 
 		PartDefinition BeakBottom = Beak.addOrReplaceChild("BeakBottom", CubeListBuilder.create().texOffs(28, 12).addBox(-0.5F, 0.0F, -1.0F, 1.0F, 0.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.5F, 0.0F));
 
 		PartDefinition Torso = Body.addOrReplaceChild("Torso", CubeListBuilder.create().texOffs(0, 8).addBox(-2.0F, 1.0F, -2.0F, 4.0F, 1.0F, 5.0F, new CubeDeformation(0.0F))
-		.texOffs(0, 0).addBox(-2.0F, -1.0F, -2.0F, 4.0F, 2.0F, 6.0F, new CubeDeformation(0.0F))
-		.texOffs(18, 8).addBox(-2.2F, -0.5F, -1.5F, 1.0F, 2.0F, 4.0F, new CubeDeformation(0.0F))
-		.texOffs(28, 8).addBox(-2.2F, -0.5F, 2.5F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F))
-		.texOffs(0, 19).addBox(1.2F, -0.5F, -1.5F, 1.0F, 2.0F, 4.0F, new CubeDeformation(0.0F))
-		.texOffs(28, 10).addBox(1.2F, -0.5F, 2.5F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F))
-		.texOffs(0, 14).addBox(-1.5F, -1.3F, -0.5F, 3.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -4.0F, 0.0F));
+				.texOffs(0, 0).addBox(-2.0F, -1.0F, -2.0F, 4.0F, 2.0F, 6.0F, new CubeDeformation(0.0F))
+				.texOffs(18, 8).addBox(-2.2F, -0.5F, -1.5F, 1.0F, 2.0F, 4.0F, new CubeDeformation(0.0F))
+				.texOffs(28, 8).addBox(-2.2F, -0.5F, 2.5F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F))
+				.texOffs(0, 19).addBox(1.2F, -0.5F, -1.5F, 1.0F, 2.0F, 4.0F, new CubeDeformation(0.0F))
+				.texOffs(28, 10).addBox(1.2F, -0.5F, 2.5F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F))
+				.texOffs(0, 14).addBox(-1.5F, -1.3F, -0.5F, 3.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -4.0F, 0.0F));
 
 		PartDefinition Wings = Torso.addOrReplaceChild("Wings", CubeListBuilder.create(), PartPose.offset(0.0F, -0.8F, 0.0F));
 
@@ -205,10 +215,10 @@ public class PiwakawakaModel extends EntityModel<PiwakawakaEntityRenderState> {
 		PartDefinition Legs = Body.addOrReplaceChild("Legs", CubeListBuilder.create(), PartPose.offset(0.0F, -2.0F, 0.5F));
 
 		PartDefinition LeftLeg = Legs.addOrReplaceChild("LeftLeg", CubeListBuilder.create().texOffs(16, 25).addBox(1.0F, -2.0F, 0.0F, 1.0F, 2.0F, 1.0F, new CubeDeformation(0.0F))
-		.texOffs(10, 19).addBox(1.0F, 0.0F, -1.0F, 1.0F, 0.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(-0.2F, 2.0F, -0.5F));
+				.texOffs(10, 19).addBox(1.0F, 0.0F, -1.0F, 1.0F, 0.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(-0.2F, 2.0F, -0.5F));
 
 		PartDefinition RightLeg = Legs.addOrReplaceChild("RightLeg", CubeListBuilder.create().texOffs(12, 25).addBox(-2.0F, -2.0F, 0.0F, 1.0F, 2.0F, 1.0F, new CubeDeformation(0.0F))
-		.texOffs(12, 28).addBox(-2.0F, 0.0F, -1.0F, 1.0F, 0.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.2F, 2.0F, -0.5F));
+				.texOffs(12, 28).addBox(-2.0F, 0.0F, -1.0F, 1.0F, 0.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.2F, 2.0F, -0.5F));
 
 		return LayerDefinition.create(meshdefinition, 32, 32);
 	}
@@ -216,5 +226,14 @@ public class PiwakawakaModel extends EntityModel<PiwakawakaEntityRenderState> {
 	@Override
 	public void setupAnim(PiwakawakaEntityRenderState state) {
 		super.setupAnim(state);
+		if (state.idleAnimationState.isStarted()) {
+			this.idle.apply(state.idleAnimationState, state.ageInTicks);
+		}
+		if (state.perchedAnimationState.isStarted()) {
+			this.perched.apply(state.perchedAnimationState, state.ageInTicks);
+		}
+		if (state.flyingAnimationState.isStarted()) {
+			this.flying.apply(state.flyingAnimationState, state.ageInTicks);
+		}
 	}
 }

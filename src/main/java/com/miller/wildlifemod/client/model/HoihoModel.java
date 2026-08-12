@@ -1,6 +1,8 @@
 package com.miller.wildlifemod.client.model;
 
+import com.miller.wildlifemod.client.animation.HoihoAnimations;
 import com.miller.wildlifemod.client.entity.state.HoihoEntityRenderState;
+import net.minecraft.client.animation.KeyframeAnimation;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -28,9 +30,20 @@ public class HoihoModel extends EntityModel<HoihoEntityRenderState>{
 	private final ModelPart Top;
 	private final ModelPart Bottom;
 
+	// One baked KeyframeAnimation per HoihoAnimations clip — bake() resolves the part
+	// name strings in each AnimationDefinition against this model's real ModelPart tree.
+	private final KeyframeAnimation idle;
+	private final KeyframeAnimation waddle;
+	private final KeyframeAnimation celebrate;
+	private final KeyframeAnimation run;
+	private final KeyframeAnimation enterWater;
+	private final KeyframeAnimation swim;
+	private final KeyframeAnimation eat;
+	private final KeyframeAnimation tempted;
+
 	public HoihoModel(ModelPart root) {
-        super(root);
-        this.Hoiho = root.getChild("Hoiho");
+		super(root);
+		this.Hoiho = root.getChild("Hoiho");
 		this.Body = this.Hoiho.getChild("Body");
 		this.Feet = this.Body.getChild("Feet");
 		this.RightFoot = this.Feet.getChild("RightFoot");
@@ -46,6 +59,15 @@ public class HoihoModel extends EntityModel<HoihoEntityRenderState>{
 		this.Beak = this.Head.getChild("Beak");
 		this.Top = this.Beak.getChild("Top");
 		this.Bottom = this.Beak.getChild("Bottom");
+
+		this.idle = HoihoAnimations.Hoiho_Idle.bake(root);
+		this.waddle = HoihoAnimations.Hoiho_Waddle.bake(root);
+		this.celebrate = HoihoAnimations.Hoiho_Celebrate.bake(root);
+		this.run = HoihoAnimations.Hoiho_Run.bake(root);
+		this.enterWater = HoihoAnimations.Hoiho_Enter_Water.bake(root);
+		this.swim = HoihoAnimations.Hoiho_Swim.bake(root);
+		this.eat = HoihoAnimations.Hoiho_Eat.bake(root);
+		this.tempted = HoihoAnimations.Hoiho_Tempted.bake(root);
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -63,16 +85,16 @@ public class HoihoModel extends EntityModel<HoihoEntityRenderState>{
 		PartDefinition LeftFoot = Feet.addOrReplaceChild("LeftFoot", CubeListBuilder.create().texOffs(20, 30).addBox(-1.0F, 0.0F, -1.0F, 2.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(2.5F, 0.0F, 0.0F));
 
 		PartDefinition Torso = Body.addOrReplaceChild("Torso", CubeListBuilder.create().texOffs(0, 11).addBox(-5.0F, -3.0F, -1.0F, 10.0F, 8.0F, 4.0F, new CubeDeformation(0.0F))
-		.texOffs(28, 16).addBox(-4.0F, -3.0F, -2.0F, 8.0F, 8.0F, 1.0F, new CubeDeformation(0.0F))
-		.texOffs(28, 11).addBox(-4.0F, 5.0F, -1.0F, 8.0F, 1.0F, 4.0F, new CubeDeformation(0.0F))
-		.texOffs(28, 25).addBox(-4.0F, -3.0F, 3.0F, 8.0F, 8.0F, 1.0F, new CubeDeformation(0.0F))
-		.texOffs(30, 0).addBox(-3.0F, -3.0F, 4.0F, 6.0F, 8.0F, 1.0F, new CubeDeformation(0.0F))
-		.texOffs(0, 44).addBox(-2.0F, 1.0F, 5.0F, 4.0F, 4.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 2.0F, -1.0F));
+				.texOffs(28, 16).addBox(-4.0F, -3.0F, -2.0F, 8.0F, 8.0F, 1.0F, new CubeDeformation(0.0F))
+				.texOffs(28, 11).addBox(-4.0F, 5.0F, -1.0F, 8.0F, 1.0F, 4.0F, new CubeDeformation(0.0F))
+				.texOffs(28, 25).addBox(-4.0F, -3.0F, 3.0F, 8.0F, 8.0F, 1.0F, new CubeDeformation(0.0F))
+				.texOffs(30, 0).addBox(-3.0F, -3.0F, 4.0F, 6.0F, 8.0F, 1.0F, new CubeDeformation(0.0F))
+				.texOffs(0, 44).addBox(-2.0F, 1.0F, 5.0F, 4.0F, 4.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 2.0F, -1.0F));
 
 		PartDefinition Chest = Torso.addOrReplaceChild("Chest", CubeListBuilder.create().texOffs(20, 34).addBox(-3.0F, -3.0F, -1.0F, 6.0F, 7.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, -2.0F));
 
 		PartDefinition Tail = Torso.addOrReplaceChild("Tail", CubeListBuilder.create().texOffs(10, 46).addBox(-1.0F, -1.0F, 0.0F, 2.0F, 2.0F, 1.0F, new CubeDeformation(0.0F))
-		.texOffs(30, 9).addBox(-0.5F, -0.3F, 1.0F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 3.5F, 6.0F));
+				.texOffs(30, 9).addBox(-0.5F, -0.3F, 1.0F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 3.5F, 6.0F));
 
 		PartDefinition Flippers = Body.addOrReplaceChild("Flippers", CubeListBuilder.create(), PartPose.offset(0.0F, -1.0F, 0.0F));
 
@@ -81,14 +103,14 @@ public class HoihoModel extends EntityModel<HoihoEntityRenderState>{
 		PartDefinition RightFlipper = Flippers.addOrReplaceChild("RightFlipper", CubeListBuilder.create().texOffs(12, 35).addBox(-0.3F, 0.0F, -1.5F, 1.0F, 8.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offset(-5.0F, -1.0F, 0.0F));
 
 		PartDefinition Head = Body.addOrReplaceChild("Head", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -4.0F, -3.0F, 8.0F, 4.0F, 7.0F, new CubeDeformation(0.0F))
-		.texOffs(0, 23).addBox(-4.0F, -5.0F, -3.0F, 8.0F, 1.0F, 6.0F, new CubeDeformation(0.0F))
-		.texOffs(0, 30).addBox(-3.0F, -6.0F, -2.0F, 6.0F, 1.0F, 4.0F, new CubeDeformation(0.0F))
-		.texOffs(34, 34).addBox(-4.0F, -2.0F, -4.0F, 8.0F, 2.0F, 1.0F, new CubeDeformation(0.0F))
-		.texOffs(0, 35).addBox(4.0F, -4.0F, -2.0F, 1.0F, 4.0F, 5.0F, new CubeDeformation(0.0F))
-		.texOffs(34, 37).addBox(-5.0F, -4.0F, -2.0F, 1.0F, 4.0F, 5.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -1.0F, -1.0F));
+				.texOffs(0, 23).addBox(-4.0F, -5.0F, -3.0F, 8.0F, 1.0F, 6.0F, new CubeDeformation(0.0F))
+				.texOffs(0, 30).addBox(-3.0F, -6.0F, -2.0F, 6.0F, 1.0F, 4.0F, new CubeDeformation(0.0F))
+				.texOffs(34, 34).addBox(-4.0F, -2.0F, -4.0F, 8.0F, 2.0F, 1.0F, new CubeDeformation(0.0F))
+				.texOffs(0, 35).addBox(4.0F, -4.0F, -2.0F, 1.0F, 4.0F, 5.0F, new CubeDeformation(0.0F))
+				.texOffs(34, 37).addBox(-5.0F, -4.0F, -2.0F, 1.0F, 4.0F, 5.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -1.0F, -1.0F));
 
 		PartDefinition Eyes = Head.addOrReplaceChild("Eyes", CubeListBuilder.create().texOffs(28, 42).addBox(-3.8F, -1.0F, -0.2F, 2.0F, 2.0F, 1.0F, new CubeDeformation(0.0F))
-		.texOffs(28, 45).addBox(1.8F, -1.0F, -0.2F, 2.0F, 2.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -3.0F, -3.0F));
+				.texOffs(28, 45).addBox(1.8F, -1.0F, -0.2F, 2.0F, 2.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -3.0F, -3.0F));
 
 		PartDefinition Beak = Head.addOrReplaceChild("Beak", CubeListBuilder.create(), PartPose.offset(0.0F, -2.0F, -3.0F));
 
@@ -102,5 +124,32 @@ public class HoihoModel extends EntityModel<HoihoEntityRenderState>{
 	@Override
 	public void setupAnim(HoihoEntityRenderState state) {
 		super.setupAnim(state);
+		// Each apply() only fires while its matching AnimationState is active — see
+		// HoihoEntity.aiStep() for where idle/waddle/celebrate/run/enterWater/swim/eat/
+		// tempted actually get started and stopped based on behavior.
+		if (state.idleAnimationState.isStarted()) {
+			this.idle.apply(state.idleAnimationState, state.ageInTicks);
+		}
+		if (state.waddleAnimationState.isStarted()) {
+			this.waddle.apply(state.waddleAnimationState, state.ageInTicks);
+		}
+		if (state.celebrateAnimationState.isStarted()) {
+			this.celebrate.apply(state.celebrateAnimationState, state.ageInTicks);
+		}
+		if (state.runAnimationState.isStarted()) {
+			this.run.apply(state.runAnimationState, state.ageInTicks);
+		}
+		if (state.enterWaterAnimationState.isStarted()) {
+			this.enterWater.apply(state.enterWaterAnimationState, state.ageInTicks);
+		}
+		if (state.swimAnimationState.isStarted()) {
+			this.swim.apply(state.swimAnimationState, state.ageInTicks);
+		}
+		if (state.eatAnimationState.isStarted()) {
+			this.eat.apply(state.eatAnimationState, state.ageInTicks);
+		}
+		if (state.temptedAnimationState.isStarted()) {
+			this.tempted.apply(state.temptedAnimationState, state.ageInTicks);
+		}
 	}
 }

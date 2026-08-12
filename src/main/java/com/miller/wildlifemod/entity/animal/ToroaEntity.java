@@ -136,6 +136,11 @@ public class ToroaEntity extends Animal {
         this.phaseTicks++;
         this.updateAnimationStates();
 
+        // Gravity has to be manually switched off while airborne — vanilla applies normal
+        // gravity every tick by default, which easily overpowers the small lift accelerations
+        // in ToroaSoarGoal, and is exactly why takeoff was never actually leaving the ground.
+        this.setNoGravity(this.getSoarPhase() != SoarPhase.GROUNDED || this.isRestingOnWater());
+
         if (this.random.nextInt(200) == 0) {
             this.windHeading += (this.random.nextFloat() - 0.5F) * 20.0F;
         }

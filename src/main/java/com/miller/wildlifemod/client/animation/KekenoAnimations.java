@@ -6,6 +6,8 @@ import net.minecraft.client.animation.Keyframe;
 import net.minecraft.client.animation.KeyframeAnimations;
 
 public class KekenoAnimations {
+
+	//animations class made by BlockBench
 	public static final AnimationDefinition Idle_Kekeno = AnimationDefinition.Builder.withLength(8.0F).looping()
 		.addAnimation("Snout", new AnimationChannel(AnimationChannel.Targets.SCALE, 
 			new Keyframe(0.0F, KeyframeAnimations.scaleVec(1.0F, 1.0F, 1.0F), AnimationChannel.Interpolations.LINEAR),

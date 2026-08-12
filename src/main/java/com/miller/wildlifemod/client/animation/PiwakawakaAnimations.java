@@ -6,6 +6,8 @@ import net.minecraft.client.animation.Keyframe;
 import net.minecraft.client.animation.KeyframeAnimations;
 
 public class PiwakawakaAnimations {
+
+	//animations class made by BlockBench
 	public static final AnimationDefinition Idle_Piwakawaka = AnimationDefinition.Builder.withLength(3.0F).looping()
 		.addAnimation("Head", new AnimationChannel(AnimationChannel.Targets.ROTATION, 
 			new Keyframe(0.0F, KeyframeAnimations.degreeVec(0.0F, 2.5F, 0.0F), AnimationChannel.Interpolations.LINEAR),

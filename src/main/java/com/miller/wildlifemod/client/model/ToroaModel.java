@@ -1,6 +1,8 @@
 package com.miller.wildlifemod.client.model;
 
+import com.miller.wildlifemod.client.animation.ToroaAnimations;
 import com.miller.wildlifemod.client.entity.state.ToroaEntityRenderState;
+import net.minecraft.client.animation.KeyframeAnimation;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -45,9 +47,18 @@ public class ToroaModel extends EntityModel<ToroaEntityRenderState>{
 	private final ModelPart LegLeft;
 	private final ModelPart FootLeft;
 
+	private final KeyframeAnimation lowSweepPhase1;
+	private final KeyframeAnimation ascendPhase2;
+	private final KeyframeAnimation apexPhase3;
+	private final KeyframeAnimation descendPhase4;
+	private final KeyframeAnimation waterSitting;
+	private final KeyframeAnimation standing;
+	private final KeyframeAnimation waddling;
+	private final KeyframeAnimation idle;
+
 	public ToroaModel(ModelPart root) {
-        super(root);
-        this.Toroa = root.getChild("Toroa");
+		super(root);
+		this.Toroa = root.getChild("Toroa");
 		this.Body = this.Toroa.getChild("Body");
 		this.Neck = this.Body.getChild("Neck");
 		this.Head = this.Neck.getChild("Head");
@@ -81,6 +92,15 @@ public class ToroaModel extends EntityModel<ToroaEntityRenderState>{
 		this.FootRight = this.LegRight.getChild("FootRight");
 		this.LegLeft = this.Legs.getChild("LegLeft");
 		this.FootLeft = this.LegLeft.getChild("FootLeft");
+
+		this.lowSweepPhase1 = ToroaAnimations.Low_Sweep_Phase1_Toroa.bake(root);
+		this.ascendPhase2 = ToroaAnimations.Ascend_Phase2_Toroa.bake(root);
+		this.apexPhase3 = ToroaAnimations.Apex_Phase3_Toroa.bake(root);
+		this.descendPhase4 = ToroaAnimations.Descend_Phase4_Toroa.bake(root);
+		this.waterSitting = ToroaAnimations.Water_Sitting_Toroa.bake(root);
+		this.standing = ToroaAnimations.Standing_Toroa.bake(root);
+		this.waddling = ToroaAnimations.Waddling_Toroa.bake(root);
+		this.idle = ToroaAnimations.Idle_Toroa.bake(root);
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -96,20 +116,20 @@ public class ToroaModel extends EntityModel<ToroaEntityRenderState>{
 		PartDefinition neck_r1 = Neck.addOrReplaceChild("neck_r1", CubeListBuilder.create().texOffs(30, 43).addBox(-1.0F, -4.0F, -2.0F, 3.0F, 5.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.5F, 0.2F, 0.625F, 0.7854F, 0.0F, 0.0F));
 
 		PartDefinition Head = Neck.addOrReplaceChild("Head", CubeListBuilder.create().texOffs(16, 43).addBox(-2.0F, -2.0F, -3.0F, 4.0F, 4.0F, 3.0F, new CubeDeformation(0.0F))
-		.texOffs(30, 64).addBox(-1.0F, -2.5F, -2.0F, 2.0F, 1.0F, 1.0F, new CubeDeformation(0.0F))
-		.texOffs(46, 58).addBox(-2.0F, -1.5F, 0.0F, 4.0F, 3.0F, 1.0F, new CubeDeformation(0.0F))
-		.texOffs(56, 58).addBox(-2.0F, -1.5F, -4.0F, 4.0F, 3.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -2.0F, -2.0F));
+				.texOffs(30, 64).addBox(-1.0F, -2.5F, -2.0F, 2.0F, 1.0F, 1.0F, new CubeDeformation(0.0F))
+				.texOffs(46, 58).addBox(-2.0F, -1.5F, 0.0F, 4.0F, 3.0F, 1.0F, new CubeDeformation(0.0F))
+				.texOffs(56, 58).addBox(-2.0F, -1.5F, -4.0F, 4.0F, 3.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -2.0F, -2.0F));
 
 		PartDefinition Eyes = Head.addOrReplaceChild("Eyes", CubeListBuilder.create().texOffs(12, 47).addBox(-2.3F, -0.5F, -0.5F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F))
-		.texOffs(46, 55).addBox(1.3F, -0.5F, -0.5F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -0.5F, -2.5F));
+				.texOffs(46, 55).addBox(1.3F, -0.5F, -0.5F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -0.5F, -2.5F));
 
 		PartDefinition Beak = Head.addOrReplaceChild("Beak", CubeListBuilder.create().texOffs(44, 38).addBox(-1.0F, 0.0F, -4.0F, 2.0F, 1.0F, 4.0F, new CubeDeformation(0.0F))
-		.texOffs(64, 27).addBox(-1.0F, -0.6F, -1.0F, 2.0F, 1.0F, 1.0F, new CubeDeformation(0.0F))
-		.texOffs(36, 51).addBox(-1.0F, 0.5F, -4.0F, 2.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, -4.0F));
+				.texOffs(64, 27).addBox(-1.0F, -0.6F, -1.0F, 2.0F, 1.0F, 1.0F, new CubeDeformation(0.0F))
+				.texOffs(36, 51).addBox(-1.0F, 0.5F, -4.0F, 2.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, -4.0F));
 
 		PartDefinition Torso = Body.addOrReplaceChild("Torso", CubeListBuilder.create().texOffs(0, 0).addBox(-3.0F, -2.0F, -5.0F, 6.0F, 4.0F, 11.0F, new CubeDeformation(0.0F))
-		.texOffs(58, 29).addBox(-2.0F, -2.5F, -6.0F, 4.0F, 4.0F, 1.0F, new CubeDeformation(0.0F))
-		.texOffs(0, 29).addBox(-2.0F, -2.5F, -5.0F, 4.0F, 1.0F, 10.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 2.0F, -1.0F));
+				.texOffs(58, 29).addBox(-2.0F, -2.5F, -6.0F, 4.0F, 4.0F, 1.0F, new CubeDeformation(0.0F))
+				.texOffs(0, 29).addBox(-2.0F, -2.5F, -5.0F, 4.0F, 1.0F, 10.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 2.0F, -1.0F));
 
 		PartDefinition Tail = Torso.addOrReplaceChild("Tail", CubeListBuilder.create().texOffs(42, 43).addBox(-2.6F, -1.6F, -1.0F, 5.0F, 3.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 6.0F));
 
@@ -148,19 +168,19 @@ public class ToroaModel extends EntityModel<ToroaEntityRenderState>{
 		PartDefinition LeftWing = Wings.addOrReplaceChild("LeftWing", CubeListBuilder.create(), PartPose.offsetAndRotation(3.0F, 0.0F, -1.0F, 0.0F, 0.0873F, 0.0F));
 
 		PartDefinition Base = LeftWing.addOrReplaceChild("Base", CubeListBuilder.create().texOffs(0, 15).addBox(-1.0F, 0.0F, -3.0F, 11.0F, 1.0F, 6.0F, new CubeDeformation(0.0F))
-		.texOffs(34, 7).addBox(-1.0F, -0.5F, -2.0F, 11.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(-0.1553F, 0.0F, 0.5566F));
+				.texOffs(34, 7).addBox(-1.0F, -0.5F, -2.0F, 11.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(-0.1553F, 0.0F, 0.5566F));
 
 		PartDefinition Middle = LeftWing.addOrReplaceChild("Middle", CubeListBuilder.create(), PartPose.offset(9.8447F, 0.0F, 0.5566F));
 
 		PartDefinition wingtop_r1 = Middle.addOrReplaceChild("wingtop_r1", CubeListBuilder.create().texOffs(34, 17).addBox(-1.0F, -2.0F, -3.0F, 9.0F, 1.0F, 4.0F, new CubeDeformation(0.0F))
-		.texOffs(28, 29).addBox(-1.0F, -1.5F, -4.0F, 9.0F, 1.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.3F, 1.5F, 1.125F, 0.0F, -0.1745F, 0.0F));
+				.texOffs(28, 29).addBox(-1.0F, -1.5F, -4.0F, 9.0F, 1.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.3F, 1.5F, 1.125F, 0.0F, -0.1745F, 0.0F));
 
 		PartDefinition End = LeftWing.addOrReplaceChild("End", CubeListBuilder.create(), PartPose.offset(17.8447F, 0.0F, 1.5566F));
 
 		PartDefinition wingendtop2_r1 = End.addOrReplaceChild("wingendtop2_r1", CubeListBuilder.create().texOffs(42, 48).addBox(-1.0F, -2.0F, -1.0F, 2.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(2.95F, 1.4F, 0.2F, 0.0F, -0.5236F, 0.0F));
 
 		PartDefinition wingendtop_r1 = End.addOrReplaceChild("wingendtop_r1", CubeListBuilder.create().texOffs(0, 47).addBox(-1.0F, -2.0F, -1.0F, 2.0F, 1.0F, 4.0F, new CubeDeformation(0.0F))
-		.texOffs(28, 36).addBox(-1.0F, -1.4F, -2.0F, 2.0F, 1.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(1.45F, 1.4F, -0.3F, 0.0F, -0.1745F, 0.0F));
+				.texOffs(28, 36).addBox(-1.0F, -1.4F, -2.0F, 2.0F, 1.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(1.45F, 1.4F, -0.3F, 0.0F, -0.1745F, 0.0F));
 
 		PartDefinition LFeather1 = End.addOrReplaceChild("LFeather1", CubeListBuilder.create(), PartPose.offset(3.0F, 0.0F, -2.0F));
 
@@ -189,19 +209,19 @@ public class ToroaModel extends EntityModel<ToroaEntityRenderState>{
 		PartDefinition RightWing = Wings.addOrReplaceChild("RightWing", CubeListBuilder.create(), PartPose.offsetAndRotation(-3.0F, 0.0F, -1.0F, 0.0F, 0.0873F, -3.1416F));
 
 		PartDefinition Base2 = RightWing.addOrReplaceChild("Base2", CubeListBuilder.create().texOffs(0, 22).addBox(-1.0F, -1.0F, -2.0F, 11.0F, 1.0F, 6.0F, new CubeDeformation(0.0F))
-		.texOffs(34, 12).addBox(-1.0F, -0.4F, -1.0F, 11.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(-0.0681F, 0.0F, -0.4396F));
+				.texOffs(34, 12).addBox(-1.0F, -0.4F, -1.0F, 11.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(-0.0681F, 0.0F, -0.4396F));
 
 		PartDefinition Middle2 = RightWing.addOrReplaceChild("Middle2", CubeListBuilder.create(), PartPose.offset(9.9319F, 0.0F, 0.5604F));
 
 		PartDefinition wingmiddle_r1 = Middle2.addOrReplaceChild("wingmiddle_r1", CubeListBuilder.create().texOffs(34, 22).addBox(-1.0F, -2.0F, -3.0F, 9.0F, 1.0F, 4.0F, new CubeDeformation(0.0F))
-		.texOffs(34, 0).addBox(-1.0F, -2.5F, -4.0F, 9.0F, 1.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.3F, 1.5F, 1.125F, 0.0F, -0.1745F, 0.0F));
+				.texOffs(34, 0).addBox(-1.0F, -2.5F, -4.0F, 9.0F, 1.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.3F, 1.5F, 1.125F, 0.0F, -0.1745F, 0.0F));
 
 		PartDefinition End2 = RightWing.addOrReplaceChild("End2", CubeListBuilder.create(), PartPose.offset(18.9319F, 0.0F, 1.5604F));
 
 		PartDefinition wingendtop3_r1 = End2.addOrReplaceChild("wingendtop3_r1", CubeListBuilder.create().texOffs(24, 51).addBox(-1.0F, -2.0F, -1.0F, 2.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(1.95F, 1.5F, 0.2F, 0.0F, -0.5236F, 0.0F));
 
 		PartDefinition wingendtop_r2 = End2.addOrReplaceChild("wingendtop_r2", CubeListBuilder.create().texOffs(12, 50).addBox(-1.0F, -2.0F, -1.0F, 2.0F, 1.0F, 4.0F, new CubeDeformation(0.0F))
-		.texOffs(0, 40).addBox(-1.0F, -2.5F, -2.0F, 2.0F, 1.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.45F, 1.5F, -0.3F, 0.0F, -0.1745F, 0.0F));
+				.texOffs(0, 40).addBox(-1.0F, -2.5F, -2.0F, 2.0F, 1.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.45F, 1.5F, -0.3F, 0.0F, -0.1745F, 0.0F));
 
 		PartDefinition RFeather1 = End2.addOrReplaceChild("RFeather1", CubeListBuilder.create(), PartPose.offset(1.7F, 0.0F, -2.0F));
 
@@ -255,5 +275,29 @@ public class ToroaModel extends EntityModel<ToroaEntityRenderState>{
 	@Override
 	public void setupAnim(ToroaEntityRenderState state) {
 		super.setupAnim(state);
+		if (state.lowSweepPhase1AnimationState.isStarted()) {
+			this.lowSweepPhase1.apply(state.lowSweepPhase1AnimationState, state.ageInTicks);
+		}
+		if (state.ascendPhase2AnimationState.isStarted()) {
+			this.ascendPhase2.apply(state.ascendPhase2AnimationState, state.ageInTicks);
+		}
+		if (state.apexPhase3AnimationState.isStarted()) {
+			this.apexPhase3.apply(state.apexPhase3AnimationState, state.ageInTicks);
+		}
+		if (state.descendPhase4AnimationState.isStarted()) {
+			this.descendPhase4.apply(state.descendPhase4AnimationState, state.ageInTicks);
+		}
+		if (state.waterSittingAnimationState.isStarted()) {
+			this.waterSitting.apply(state.waterSittingAnimationState, state.ageInTicks);
+		}
+		if (state.standingAnimationState.isStarted()) {
+			this.standing.apply(state.standingAnimationState, state.ageInTicks);
+		}
+		if (state.waddlingAnimationState.isStarted()) {
+			this.waddling.apply(state.waddlingAnimationState, state.ageInTicks);
+		}
+		if (state.idleAnimationState.isStarted()) {
+			this.idle.apply(state.idleAnimationState, state.ageInTicks);
+		}
 	}
 }

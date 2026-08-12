@@ -11,7 +11,7 @@ import net.minecraft.resources.Identifier;
 
 public class HoihoEntityRenderer extends MobRenderer<HoihoEntity, HoihoEntityRenderState, HoihoModel> {
     private static final Identifier TEXTURE =
-            Identifier.fromNamespaceAndPath(AotearoaWildlife.MOD_ID, "wildlifemod/textures/entity/hoiho_texture.png");
+            Identifier.fromNamespaceAndPath(AotearoaWildlife.MOD_ID, "textures/entity/hoiho_texture.png");
 
     public HoihoEntityRenderer(EntityRendererProvider.Context context) {
         super(context, new HoihoModel(context.bakeLayer(ModEntityModelLayers.HOIHO)), 0.4f);

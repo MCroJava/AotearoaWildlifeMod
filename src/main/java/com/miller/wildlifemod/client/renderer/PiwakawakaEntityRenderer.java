@@ -11,7 +11,7 @@ import net.minecraft.resources.Identifier;
 
 public class PiwakawakaEntityRenderer extends MobRenderer<PiwakawakaEntity, PiwakawakaEntityRenderState, PiwakawakaModel> {
     private static final Identifier TEXTURE =
-            Identifier.fromNamespaceAndPath(AotearoaWildlife.MOD_ID, "wildlifemod/textures/entity/piwakawaka_texture.png");
+            Identifier.fromNamespaceAndPath(AotearoaWildlife.MOD_ID, "textures/entity/piwakawaka_texture.png");
 
     public PiwakawakaEntityRenderer(EntityRendererProvider.Context context) {
         super(context, new PiwakawakaModel(context.bakeLayer(ModEntityModelLayers.PIWAKAWAKA)), 0.2f);

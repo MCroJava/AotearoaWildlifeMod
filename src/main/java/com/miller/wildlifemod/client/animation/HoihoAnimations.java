@@ -6,6 +6,8 @@ import net.minecraft.client.animation.Keyframe;
 import net.minecraft.client.animation.KeyframeAnimations;
 
 public class HoihoAnimations {
+
+	//animations class made by BlockBench
 	public static final AnimationDefinition Hoiho_Idle = AnimationDefinition.Builder.withLength(4.0F).looping()
 		.addAnimation("Chest", new AnimationChannel(AnimationChannel.Targets.ROTATION,
 			new Keyframe(0.0F, KeyframeAnimations.degreeVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.LINEAR)
