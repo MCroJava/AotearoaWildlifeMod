@@ -1,10 +1,12 @@
 package com.miller.wildlifemod.client.renderer;
 
 import com.miller.wildlifemod.AotearoaWildlife;
+import com.miller.wildlifemod.client.entity.state.HoihoEntityRenderState;
 import com.miller.wildlifemod.client.entity.state.KekenoEntityRenderState;
 import com.miller.wildlifemod.client.model.KekenoModel;
 import com.miller.wildlifemod.client.model.ModEntityModelLayers;
 import com.miller.wildlifemod.entity.animal.KekenoEntity;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.Identifier;
@@ -15,6 +17,11 @@ public class KekenoEntityRenderer extends MobRenderer<KekenoEntity, KekenoEntity
 
     public KekenoEntityRenderer(EntityRendererProvider.Context context) {
         super(context, new KekenoModel(context.bakeLayer(ModEntityModelLayers.KEKENO)), 0.5f);
+    }
+    @Override
+    protected void scale(KekenoEntityRenderState state, PoseStack poseStack) {
+        super.scale(state, poseStack);
+        poseStack.scale(2.5F, 2.5F, 3F);
     }
 
     @Override
@@ -27,10 +34,6 @@ public class KekenoEntityRenderer extends MobRenderer<KekenoEntity, KekenoEntity
         return TEXTURE;
     }
 
-    // NOTE: entity.idleAnimationState / .walkingAnimationState / .runningAnimationState /
-    // .swimmingAnimationState need to exist on KekenoEntity with these exact names for this
-    // to compile — the entity class as originally written used different names
-    // (swimAnimationState, haulOutAnimationState) that don't match the real Blockbench clips.
     @Override
     public void extractRenderState(KekenoEntity entity, KekenoEntityRenderState state, float partialTick) {
         super.extractRenderState(entity, state, partialTick);

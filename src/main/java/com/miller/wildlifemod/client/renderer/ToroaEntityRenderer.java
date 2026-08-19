@@ -1,10 +1,12 @@
 package com.miller.wildlifemod.client.renderer;
 
 import com.miller.wildlifemod.AotearoaWildlife;
+import com.miller.wildlifemod.client.entity.state.HoihoEntityRenderState;
 import com.miller.wildlifemod.client.entity.state.ToroaEntityRenderState;
 import com.miller.wildlifemod.client.model.ModEntityModelLayers;
 import com.miller.wildlifemod.client.model.ToroaModel;
 import com.miller.wildlifemod.entity.animal.ToroaEntity;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.Identifier;
@@ -21,7 +23,11 @@ public class ToroaEntityRenderer extends MobRenderer<ToroaEntity, ToroaEntityRen
     public ToroaEntityRenderState createRenderState() {
         return new ToroaEntityRenderState();
     }
-
+    @Override
+    protected void scale(ToroaEntityRenderState state, PoseStack poseStack) {
+        super.scale(state, poseStack);
+        poseStack.scale(1.2F, 1.2F, 1.2F);
+    }
     @Override
     public Identifier getTextureLocation(ToroaEntityRenderState state) {
         return TEXTURE;

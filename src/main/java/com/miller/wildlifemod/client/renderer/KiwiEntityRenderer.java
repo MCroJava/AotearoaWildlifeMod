@@ -1,10 +1,12 @@
 package com.miller.wildlifemod.client.renderer;
 
 import com.miller.wildlifemod.AotearoaWildlife;
+import com.miller.wildlifemod.client.entity.state.HoihoEntityRenderState;
 import com.miller.wildlifemod.client.entity.state.KiwiEntityRenderState;
 import com.miller.wildlifemod.client.model.KiwiModel;
 import com.miller.wildlifemod.client.model.ModEntityModelLayers;
 import com.miller.wildlifemod.entity.animal.KiwiEntity;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.Identifier;
@@ -27,10 +29,11 @@ public class KiwiEntityRenderer extends MobRenderer<KiwiEntity, KiwiEntityRender
         return TEXTURE;
     }
 
-    // NOTE: KiwiEntity needs matching AnimationState fields (idle, walking, running) with
-    // these exact names — the entity class as originally written used different names
-    // (idleAnimationState matches, but walkAnimationState/probeAnimationState/burrowAnimationState
-    // don't match walking/running here) for this to compile.
+    @Override
+    protected void scale(KiwiEntityRenderState state, PoseStack poseStack) {
+        super.scale(state, poseStack);
+        poseStack.scale(1.0F, 1.0F, 1.0F);
+    }
     @Override
     public void extractRenderState(KiwiEntity entity, KiwiEntityRenderState state, float partialTick) {
         super.extractRenderState(entity, state, partialTick);

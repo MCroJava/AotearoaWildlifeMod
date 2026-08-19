@@ -16,27 +16,27 @@ public final class ModEntityTypes {
     public static final EntityType<KiwiEntity> KIWI = register(
             "kiwi",
             EntityType.Builder.of(KiwiEntity::new, MobCategory.CREATURE)
-                    .sized(0.6F, 0.5F));
+                    .sized(1F, 1F));
 
     public static final EntityType<KekenoEntity> KEKENO = register(
             "kekeno",
             EntityType.Builder.of(KekenoEntity::new, MobCategory.CREATURE)
-                    .sized(1.1F, 0.8F));
+                    .sized(3F, 2.5F));
 
     public static final EntityType<HoihoEntity> HOIHO = register(
             "hoiho",
             EntityType.Builder.of(HoihoEntity::new, MobCategory.CREATURE)
-                    .sized(0.6F, 0.9F));
+                    .sized(1F, 1F));
 
     public static final EntityType<PiwakawakaEntity> PIWAKAWAKA = register(
             "piwakawaka",
             EntityType.Builder.of(PiwakawakaEntity::new, MobCategory.CREATURE)
-                    .sized(0.35F, 0.35F));
+                    .sized(0.8F, 0.8F));
 
     public static final EntityType<ToroaEntity> TOROA = register(
             "albatross",
             EntityType.Builder.of(ToroaEntity::new, MobCategory.CREATURE)
-                    .sized(1.4F, 0.9F));
+                    .sized(1.2F, 1.2F));
 
     private static <T extends net.minecraft.world.entity.Entity> EntityType<T> register(
             String path, EntityType.Builder<T> builder) {

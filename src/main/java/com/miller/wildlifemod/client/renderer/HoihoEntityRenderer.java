@@ -5,6 +5,7 @@ import com.miller.wildlifemod.client.entity.state.HoihoEntityRenderState;
 import com.miller.wildlifemod.client.model.HoihoModel;
 import com.miller.wildlifemod.client.model.ModEntityModelLayers;
 import com.miller.wildlifemod.entity.animal.HoihoEntity;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.Identifier;
@@ -16,7 +17,11 @@ public class HoihoEntityRenderer extends MobRenderer<HoihoEntity, HoihoEntityRen
     public HoihoEntityRenderer(EntityRendererProvider.Context context) {
         super(context, new HoihoModel(context.bakeLayer(ModEntityModelLayers.HOIHO)), 0.4f);
     }
-
+    @Override
+    protected void scale(HoihoEntityRenderState state, PoseStack poseStack) {
+        super.scale(state, poseStack);
+        poseStack.scale(1.0F, 1.0F, 1.0F);
+    }
     @Override
     public HoihoEntityRenderState createRenderState() {
         return new HoihoEntityRenderState();

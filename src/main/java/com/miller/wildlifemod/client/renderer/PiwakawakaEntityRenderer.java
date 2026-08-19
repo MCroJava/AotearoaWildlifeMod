@@ -1,10 +1,12 @@
 package com.miller.wildlifemod.client.renderer;
 
 import com.miller.wildlifemod.AotearoaWildlife;
+import com.miller.wildlifemod.client.entity.state.HoihoEntityRenderState;
 import com.miller.wildlifemod.client.entity.state.PiwakawakaEntityRenderState;
 import com.miller.wildlifemod.client.model.ModEntityModelLayers;
 import com.miller.wildlifemod.client.model.PiwakawakaModel;
 import com.miller.wildlifemod.entity.animal.PiwakawakaEntity;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.Identifier;
@@ -16,7 +18,11 @@ public class PiwakawakaEntityRenderer extends MobRenderer<PiwakawakaEntity, Piwa
     public PiwakawakaEntityRenderer(EntityRendererProvider.Context context) {
         super(context, new PiwakawakaModel(context.bakeLayer(ModEntityModelLayers.PIWAKAWAKA)), 0.2f);
     }
-
+    @Override
+    protected void scale(PiwakawakaEntityRenderState state, PoseStack poseStack) {
+        super.scale(state, poseStack);
+        poseStack.scale(0.8F, 0.8F, 0.8F);
+    }
     @Override
     public PiwakawakaEntityRenderState createRenderState() {
         return new PiwakawakaEntityRenderState();
@@ -27,9 +33,7 @@ public class PiwakawakaEntityRenderer extends MobRenderer<PiwakawakaEntity, Piwa
         return TEXTURE;
     }
 
-    // NOTE: PiwakawakaEntity needs matching AnimationState fields (idle, perched, flying)
-    // with these exact names — the entity class as originally written used different names
-    // (flapAnimationState, dartAnimationState) for this to compile.
+
     @Override
     public void extractRenderState(PiwakawakaEntity entity, PiwakawakaEntityRenderState state, float partialTick) {
         super.extractRenderState(entity, state, partialTick);
