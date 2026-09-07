@@ -14,6 +14,7 @@ public class AotearoaWildlifeClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        //Registers the modellayers and the renderentity, so the entitys show up in game.
         ModEntityModelLayers.registerModelLayers();
 
         EntityRendererRegistry.register(ModEntityTypes.HOIHO, HoihoEntityRenderer::new);

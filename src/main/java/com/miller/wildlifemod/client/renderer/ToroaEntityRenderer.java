@@ -13,26 +13,33 @@ import net.minecraft.resources.Identifier;
 
 public class ToroaEntityRenderer extends MobRenderer<ToroaEntity, ToroaEntityRenderState, ToroaModel> {
     private static final Identifier TEXTURE =
+            //Identifies what texture the entity should use
             Identifier.fromNamespaceAndPath(AotearoaWildlife.MOD_ID, "textures/entity/toroa_texture.png");
 
+    //Says how big the entities shadow will be
     public ToroaEntityRenderer(EntityRendererProvider.Context context) {
         super(context, new ToroaModel(context.bakeLayer(ModEntityModelLayers.TOROA)), 0.6f);
     }
 
+    //This is called in the AotearoaWildlifeClient class, and registers the entity renderer.
     @Override
     public ToroaEntityRenderState createRenderState() {
         return new ToroaEntityRenderState();
     }
+
+    //This decides how big the model of the entity will be
     @Override
     protected void scale(ToroaEntityRenderState state, PoseStack poseStack) {
         super.scale(state, poseStack);
         poseStack.scale(1.2F, 1.2F, 1.2F);
     }
+    //tells the class where to get the texture from.
     @Override
     public Identifier getTextureLocation(ToroaEntityRenderState state) {
         return TEXTURE;
     }
 
+    //copys all the entities render states.
     @Override
     public void extractRenderState(ToroaEntity entity, ToroaEntityRenderState state, float partialTick) {
         super.extractRenderState(entity, state, partialTick);

@@ -34,22 +34,28 @@ public class PiwakawakaEntity extends Animal {
     public final AnimationState perchedAnimationState = new AnimationState();
     public final AnimationState flyingAnimationState = new AnimationState();
 
+
     private static final EntityDataAccessor<Boolean> DATA_PERCHED =
             SynchedEntityData.defineId(PiwakawakaEntity.class, EntityDataSerializers.BOOLEAN);
 
+    // @Nullable means this variable is allowed to be null (i.e. "not following anyone
+    // right now"). It's not synced data because only the server's AI needs to know it.
     @Nullable
     private LivingEntity followTarget;
 
     public PiwakawakaEntity(EntityType<? extends Animal> entityType, Level level) {
         super(entityType, level);
+        // FlyingMoveControl handles the physics of flight for us. The "20" is how sharply
+        // it can turn, and "true" means it can hover in place instead of always needing
+        // forward motion to stay airborne.
         this.moveControl = new FlyingMoveControl(this, 20, true);
-        this.setPathfindingMalus(PathType.FIRE, -1.0F);
-        this.setPathfindingMalus(PathType.WATER, -1.0F);
+        this.setPathfindingMalus(PathType.FIRE, -1.0F); // Never fly through fire on purpose.
+        this.setPathfindingMalus(PathType.WATER, -1.0F); // Never fly into water on purpose.
     }
 
     public static AttributeSupplier.Builder createAttributes() {
         return Animal.createAnimalAttributes()
-                .add(Attributes.MAX_HEALTH, 3.0D)
+                .add(Attributes.MAX_HEALTH, 3.0D) // Small and fragile, like a real fantail.
                 .add(Attributes.FLYING_SPEED, 0.6D)
                 .add(Attributes.MOVEMENT_SPEED, 0.3D);
     }
@@ -66,9 +72,17 @@ public class PiwakawakaEntity extends Animal {
 
     public void setPerched(boolean perched) {
         this.entityData.set(DATA_PERCHED, perched);
+        // While perched we turn gravity off, so it can stand on a branch/fence without
+        // slowly sinking through it or needing to balance perfectly.
         this.setNoGravity(perched);
     }
 
+    /**
+     * A "flying" navigator that also overrides isStableDestination() — that method
+     * decides whether a spot is safe to land the pathfinding on. We say a spot only
+     * counts as stable if there's solid ground directly beneath it, so the bird
+     * doesn't try to path to somewhere floating in mid-air.
+     */
     @Override
     protected PathNavigation createNavigation(Level level) {
         FlyingPathNavigation navigation = new FlyingPathNavigation(this, level) {
@@ -86,26 +100,34 @@ public class PiwakawakaEntity extends Animal {
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new PanicGoal(this, 2.2D));
         this.goalSelector.addGoal(1, new BreedGoal(this, 1.4D));
-        this.goalSelector.addGoal(2, new PiwakawakaFollowGoal(this, 6.0D, 12.0D));
-        this.goalSelector.addGoal(3, new PiwakawakaDartGoal(this));
-        this.goalSelector.addGoal(4, new PiwakawakaPerchGoal(this));
-        this.goalSelector.addGoal(5, new PiwakawakaFlitGoal(this));
+        this.goalSelector.addGoal(2, new PiwakawakaFollowGoal(this, 6.0D, 12.0D)); // Orbits a nearby creature.
+        this.goalSelector.addGoal(3, new PiwakawakaDartGoal(this));                // Quick, erratic little bursts of movement.
+        this.goalSelector.addGoal(4, new PiwakawakaPerchGoal(this));               // Occasionally lands somewhere to rest.
+        this.goalSelector.addGoal(5, new PiwakawakaFlitGoal(this));                // Default wandering flight.
         this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 5.0F));
         this.goalSelector.addGoal(7, new RandomLookAroundGoal(this));
     }
 
+    // A small helper method the animation logic and goals both rely on to know
+    // whether the bird is currently in the air.
     public boolean isFlying() {
         return !this.onGround() && !this.isPerched();
     }
 
+    // Fantail don't take handouts from players in this mod, so this always returns false.
     @Override
     public boolean isFood(ItemStack stack) {
         return false;
     }
 
+    /**
+     * Decides which of the three animations (idle / perched / flying) should play,
+     * based on the bird's current physical state.
+     */
     @Override
     public void aiStep() {
         super.aiStep();
+        // horizontalDistanceSqr() checks how fast it's moving sideways.
         boolean moving = this.getDeltaMovement().horizontalDistanceSqr() > 0.0025D;
 
         if (this.isPerched()) {
@@ -123,6 +145,8 @@ public class PiwakawakaEntity extends Animal {
         }
     }
 
+    // Birds shouldn't take fall damage from landing — these two overrides turn
+    // that off completely.
     @Override
     protected void checkFallDamage(double y, boolean onGround, net.minecraft.world.level.block.state.BlockState state, BlockPos pos) {
         // fantail are birds — no fall damage
@@ -154,10 +178,14 @@ public class PiwakawakaEntity extends Animal {
         return SoundEvents.GENERIC_DEATH;
     }
 
+    /**
+     * Custom goal: pick a nearby player or animal and loosely fly circles around
+     * them, imitating how real fantail tag along to snap up disturbed insects.
+     */
     static class PiwakawakaFollowGoal extends Goal {
         private final PiwakawakaEntity fantail;
-        private final double followRange;
-        private final double giveUpRange;
+        private final double followRange; // How far away it'll look to find someone new to follow.
+        private final double giveUpRange; // How far away is "too far," making it give up and stop following.
 
         public PiwakawakaFollowGoal(PiwakawakaEntity fantail, double followRange, double giveUpRange) {
             this.fantail = fantail;
@@ -169,10 +197,12 @@ public class PiwakawakaEntity extends Animal {
         @Override
         public boolean canUse() {
             if (this.fantail.isPerched()) return false;
+            // If already following someone who's still close enough, just keep going.
             if (this.fantail.followTarget != null && this.fantail.followTarget.isAlive()
                     && this.fantail.distanceTo(this.fantail.followTarget) < this.giveUpRange) {
                 return true;
             }
+            // Otherwise, look for a new player or animal nearby to follow instead.
             List<LivingEntity> candidates = this.fantail.level().getEntitiesOfClass(
                     LivingEntity.class, this.fantail.getBoundingBox().inflate(this.followRange),
                     e -> (e instanceof Player || e instanceof net.minecraft.world.entity.animal.Animal) && e != this.fantail);
@@ -205,6 +235,10 @@ public class PiwakawakaEntity extends Animal {
         }
     }
 
+    /**
+     * Custom goal: short, sharp little bursts of movement — this is the "erratic
+     * darting flight" fantail are known for, rather than smooth gliding.
+     */
     static class PiwakawakaDartGoal extends Goal {
         private final PiwakawakaEntity fantail;
         private int dartCooldown;
@@ -224,6 +258,9 @@ public class PiwakawakaEntity extends Animal {
             return this.fantail.getRandom().nextInt(15) == 0;
         }
 
+        // This goal is a single instant "impulse," not something that lasts over time,
+        // so it never needs to keep running after start() — returning false here means
+        // canUse() will simply be checked again fresh next time.
         @Override
         public boolean canContinueToUse() {
             return false;
@@ -232,6 +269,7 @@ public class PiwakawakaEntity extends Animal {
         @Override
         public void start() {
             RandomSource random = this.fantail.getRandom();
+            // A small random push in a random direction — this IS the "dart."
             Vec3 dart = new Vec3(
                     (random.nextDouble() - 0.5D) * 1.4D,
                     (random.nextDouble() - 0.3D) * 0.8D,
@@ -241,6 +279,7 @@ public class PiwakawakaEntity extends Animal {
         }
     }
 
+    /** Custom goal: occasionally land somewhere solid and rest for a while. */
     static class PiwakawakaPerchGoal extends Goal {
         private final PiwakawakaEntity fantail;
         private int perchTicks;
@@ -256,7 +295,7 @@ public class PiwakawakaEntity extends Animal {
             if (!this.fantail.onGround() && this.fantail.getRandom().nextInt(300) == 0) {
                 net.minecraft.world.level.block.state.BlockState below =
                         this.fantail.level().getBlockState(this.fantail.blockPosition().below());
-                return !below.isAir();
+                return !below.isAir(); // Only perch if there's actually something solid below.
             }
             return false;
         }
@@ -270,7 +309,7 @@ public class PiwakawakaEntity extends Animal {
         public void start() {
             this.perchTicks = 60 + this.fantail.getRandom().nextInt(100);
             this.fantail.setPerched(true);
-            this.fantail.setDeltaMovement(Vec3.ZERO);
+            this.fantail.setDeltaMovement(Vec3.ZERO); // Stop dead in place.
         }
 
         @Override
@@ -284,6 +323,7 @@ public class PiwakawakaEntity extends Animal {
         }
     }
 
+    /** Custom goal: the default behavior when nothing else applies — gentle wandering flight. */
     static class PiwakawakaFlitGoal extends Goal {
         private final PiwakawakaEntity fantail;
 
@@ -294,6 +334,8 @@ public class PiwakawakaEntity extends Animal {
 
         @Override
         public boolean canUse() {
+            // isDone() checks if the navigator has finished (or never had) somewhere
+            // to go — i.e. "is the bird just floating around with nothing to do?"
             return !this.fantail.isPerched() && this.fantail.getNavigation().isDone();
         }
 

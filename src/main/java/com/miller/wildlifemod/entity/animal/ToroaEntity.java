@@ -8,7 +8,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -31,16 +31,15 @@ import org.jetbrains.annotations.Nullable;
 import java.util.EnumSet;
 import java.util.List;
 
-
 public class ToroaEntity extends Animal {
 
-    public enum SoarPhase { GROUNDED, LOW_SWEEP, ASCEND, APEX, DESCEND }
-
-    private static final EntityDataAccessor<Integer> DATA_SOAR_PHASE =
-            SynchedEntityData.defineId(ToroaEntity.class, EntityDataSerializers.INT);
+    // Whether this particular Toroa is currently floating/resting on water.
+    // See KekenoEntity for a fuller explanation of what "synced" data means.
     private static final EntityDataAccessor<Boolean> DATA_RESTING_ON_WATER =
             SynchedEntityData.defineId(ToroaEntity.class, EntityDataSerializers.BOOLEAN);
 
+    // One animation "switch" per clip. lowSweepPhase1AnimationState is kept here
+    // (so nothing else that references it breaks) but is never turned on anymore.
     public final AnimationState lowSweepPhase1AnimationState = new AnimationState();
     public final AnimationState ascendPhase2AnimationState = new AnimationState();
     public final AnimationState apexPhase3AnimationState = new AnimationState();
@@ -50,38 +49,32 @@ public class ToroaEntity extends Animal {
     public final AnimationState waddlingAnimationState = new AnimationState();
     public final AnimationState idleAnimationState = new AnimationState();
 
-    private int phaseTicks;
-    private float windHeading;
-    private int takeoffRunTicks;
-    private int idleCooldown;
+    // How fast (in blocks per tick) it needs to be moving up or down before we
+    // count that as "ascending"/"descending" rather than just level flight.
+    // Small, so gentle drifting doesn't cause flickering between animations.
+    private static final double VERTICAL_ANIMATION_THRESHOLD = 0.02D;
+
+    private int takeoffRunTicks; // Counts down during the running/paddling takeoff start.
+    private int idleCooldown;    // Counts down during the occasional idle animation while grounded.
 
     public ToroaEntity(EntityType<? extends Animal> entityType, Level level) {
         super(entityType, level);
+        // FlyingMoveControl(this, 10, false) — "10" controls how sharply it can turn,
+        // and "false" means it can't hover in place (it always needs forward motion).
         this.moveControl = new FlyingMoveControl(this, 10, false);
-        this.windHeading = this.random.nextFloat() * 360.0F;
     }
 
     public static AttributeSupplier.Builder createAttributes() {
         return Animal.createAnimalAttributes()
                 .add(Attributes.MAX_HEALTH, 10.0D)
                 .add(Attributes.FLYING_SPEED, 1.1D)
-                .add(Attributes.MOVEMENT_SPEED, 0.2D);
+                .add(Attributes.MOVEMENT_SPEED, 0.2D); // Slow and clumsy on the ground.
     }
 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
-        builder.define(DATA_SOAR_PHASE, SoarPhase.GROUNDED.ordinal());
         builder.define(DATA_RESTING_ON_WATER, false);
-    }
-
-    public SoarPhase getSoarPhase() {
-        return SoarPhase.values()[this.entityData.get(DATA_SOAR_PHASE)];
-    }
-
-    public void setSoarPhase(SoarPhase phase) {
-        this.entityData.set(DATA_SOAR_PHASE, phase.ordinal());
-        this.phaseTicks = 0;
     }
 
     public boolean isRestingOnWater() {
@@ -90,14 +83,18 @@ public class ToroaEntity extends Animal {
 
     public void setRestingOnWater(boolean resting) {
         this.entityData.set(DATA_RESTING_ON_WATER, resting);
-        this.setNoGravity(resting);
+    }
+
+    // True whenever it's airborne and not currently floating on water.
+    public boolean isFlying() {
+        return !this.onGround() && !this.isRestingOnWater();
     }
 
     @Override
     protected PathNavigation createNavigation(Level level) {
         FlyingPathNavigation navigation = new FlyingPathNavigation(this, level);
         navigation.setCanOpenDoors(false);
-        navigation.setCanFloat(true);
+        navigation.setCanFloat(true); // Allowed to float on the surface of water.
         return navigation;
     }
 
@@ -105,14 +102,10 @@ public class ToroaEntity extends Animal {
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new ToroaRestOnWaterGoal(this));
         this.goalSelector.addGoal(1, new ToroaTakeoffGoal(this));
-        this.goalSelector.addGoal(2, new ToroaSoarGoal(this));
+        this.goalSelector.addGoal(2, new ToroaFlyGoal(this)); // Simple random wandering flight — replaces the old soaring cycle.
         this.goalSelector.addGoal(3, new ToroaFeedGoal(this));
         this.goalSelector.addGoal(4, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
-    }
-
-    public boolean isFlying() {
-        return this.getSoarPhase() != SoarPhase.GROUNDED && !this.isRestingOnWater();
     }
 
     @Override
@@ -133,23 +126,18 @@ public class ToroaEntity extends Animal {
     @Override
     public void aiStep() {
         super.aiStep();
-        this.phaseTicks++;
         this.updateAnimationStates();
-
-        // Gravity has to be manually switched off while airborne — vanilla applies normal
-        // gravity every tick by default, which easily overpowers the small lift accelerations
-        // in ToroaSoarGoal, and is exactly why takeoff was never actually leaving the ground.
-        this.setNoGravity(this.getSoarPhase() != SoarPhase.GROUNDED || this.isRestingOnWater());
-
-        if (this.random.nextInt(200) == 0) {
-            this.windHeading += (this.random.nextFloat() - 0.5F) * 20.0F;
-        }
     }
 
+    /**
+     * Decides which animation to play. While flying, this is based purely on
+     * vertical speed (getDeltaMovement().y) — moving up plays Ascend, moving
+     * down plays Descend, and anything in between (roughly level) plays Apex.
+     * While grounded, it falls back to the same waddling/standing/idle logic
+     * as before.
+     */
     private void updateAnimationStates() {
-        SoarPhase phase = this.getSoarPhase();
-
-        this.lowSweepPhase1AnimationState.stop();
+        this.lowSweepPhase1AnimationState.stop(); // Never used in this version.
         this.ascendPhase2AnimationState.stop();
         this.apexPhase3AnimationState.stop();
         this.descendPhase4AnimationState.stop();
@@ -160,33 +148,39 @@ public class ToroaEntity extends Animal {
 
         if (this.isRestingOnWater()) {
             this.waterSittingAnimationState.startIfStopped(this.tickCount);
-            return;
-        }
-
-        switch (phase) {
-            case LOW_SWEEP -> this.lowSweepPhase1AnimationState.startIfStopped(this.tickCount);
-            case ASCEND -> this.ascendPhase2AnimationState.startIfStopped(this.tickCount);
-            case APEX -> this.apexPhase3AnimationState.startIfStopped(this.tickCount);
-            case DESCEND -> this.descendPhase4AnimationState.startIfStopped(this.tickCount);
-            case GROUNDED -> {
-                // On land: waddling while moving, standing while stationary, with an
-                // occasional fallback to idle so it isn't rigid the whole time grounded.
-                if (this.walkAnimation.isMoving()) {
-                    this.waddlingAnimationState.startIfStopped(this.tickCount);
-                    this.idleCooldown = 0;
-                } else if (this.idleCooldown > 0) {
-                    this.idleCooldown--;
-                    this.idleAnimationState.startIfStopped(this.tickCount);
-                } else {
-                    this.standingAnimationState.startIfStopped(this.tickCount);
-                    if (this.random.nextInt(300) == 0) {
-                        this.idleCooldown = 40;
-                    }
+        } else if (this.isFlying()) {
+            double verticalSpeed = this.getDeltaMovement().y;
+            if (verticalSpeed > VERTICAL_ANIMATION_THRESHOLD) {
+                this.ascendPhase2AnimationState.startIfStopped(this.tickCount);
+            } else if (verticalSpeed < -VERTICAL_ANIMATION_THRESHOLD) {
+                this.descendPhase4AnimationState.startIfStopped(this.tickCount);
+            } else {
+                this.apexPhase3AnimationState.startIfStopped(this.tickCount); // Roughly level flight.
+            }
+        } else {
+            // On the ground: waddling while moving, standing while stationary, with an
+            // occasional fallback to idle so it isn't rigid the whole time grounded.
+            if (this.walkAnimation.isMoving()) {
+                this.waddlingAnimationState.startIfStopped(this.tickCount);
+                this.idleCooldown = 0;
+            } else if (this.idleCooldown > 0) {
+                this.idleCooldown--;
+                this.idleAnimationState.startIfStopped(this.tickCount);
+            } else {
+                this.standingAnimationState.startIfStopped(this.tickCount);
+                if (this.random.nextInt(300) == 0) {
+                    this.idleCooldown = 40;
                 }
             }
         }
     }
 
+    @Override
+    public boolean isNoGravity() {
+        return this.isFlying();
+    }
+
+    // No fall damage for a soaring seabird.
     @Override
     protected void checkFallDamage(double y, boolean onGround, BlockState state, BlockPos pos) {
         // no fall damage for a soaring seabird
@@ -218,6 +212,7 @@ public class ToroaEntity extends Animal {
         return SoundEvents.GENERIC_DEATH;
     }
 
+    // Custom goal: occasionally settles down to float and rest on open water.
     static class ToroaRestOnWaterGoal extends Goal {
         private final ToroaEntity toroa;
 
@@ -228,9 +223,8 @@ public class ToroaEntity extends Animal {
 
         @Override
         public boolean canUse() {
-            return this.toroa.isInWater() && this.toroa.getSoarPhase() != SoarPhase.GROUNDED
-                    && this.toroa.getRandom().nextInt(100) == 0
-                    || (this.toroa.isInWater() && this.toroa.getSoarPhase() == SoarPhase.GROUNDED && !this.toroa.isRestingOnWater() && this.toroa.getRandom().nextInt(100) == 0);
+            return this.toroa.isInWater() && !this.toroa.isRestingOnWater()
+                    && this.toroa.getRandom().nextInt(100) == 0;
         }
 
         @Override
@@ -241,7 +235,8 @@ public class ToroaEntity extends Animal {
         @Override
         public void start() {
             this.toroa.setRestingOnWater(true);
-            this.toroa.setSoarPhase(SoarPhase.GROUNDED);
+            // Slow the bird down a lot when it settles, so it doesn't keep skidding
+            // across the water's surface at flying speed.
             this.toroa.setDeltaMovement(this.toroa.getDeltaMovement().multiply(0.2D, 0.0D, 0.2D));
         }
 
@@ -250,6 +245,9 @@ public class ToroaEntity extends Animal {
             this.toroa.setRestingOnWater(false);
         }
     }
+      //Custom goal: albatrosses famously can't take off from a standstill — they
+      //need a running (or paddling) start first. Once the run finishes, we just
+      //give it an upward boost and let ToroaFlyGoal take over from there.
 
     static class ToroaTakeoffGoal extends Goal {
         private final ToroaEntity toroa;
@@ -263,8 +261,8 @@ public class ToroaEntity extends Animal {
         @Override
         public boolean canUse() {
             return (this.toroa.isRestingOnWater() || this.toroa.onGround())
-                    && this.toroa.getSoarPhase() == SoarPhase.GROUNDED
-                    && this.toroa.getRandom().nextInt(120) == 0;
+                    && !this.toroa.isFlying()
+                    && this.toroa.getRandom().nextInt(120) == 0; // Small random chance each tick.
         }
 
         @Override
@@ -275,9 +273,10 @@ public class ToroaEntity extends Animal {
         @Override
         public void start() {
             this.toroa.setRestingOnWater(false);
-            this.toroa.takeoffRunTicks = 30;
-            float headingRad = this.toroa.windHeading * Mth.DEG_TO_RAD;
-            this.runDirection = new Vec3(-Mth.sin(headingRad), 0.0D, Mth.cos(headingRad));
+            this.toroa.takeoffRunTicks = 30; // Run for 30 ticks (1.5 seconds) before lifting off.
+            RandomSource random = this.toroa.getRandom();
+            float randomAngle = random.nextFloat() * (float) (Math.PI * 2);
+            this.runDirection = new Vec3(Math.cos(randomAngle), 0.0D, Math.sin(randomAngle));
         }
 
         @Override
@@ -288,83 +287,47 @@ public class ToroaEntity extends Animal {
             this.toroa.setDeltaMovement(this.toroa.getDeltaMovement().add(accel));
 
             if (this.toroa.takeoffRunTicks <= 0) {
-                this.toroa.setSoarPhase(SoarPhase.ASCEND);
+                // One last upward push to properly leave the ground/water — ToroaFlyGoal
+                // takes over from the very next tick once it's actually airborne.
+                this.toroa.setDeltaMovement(this.toroa.getDeltaMovement().add(0.0D, 0.3D, 0.0D));
             }
         }
     }
 
-    /** The dynamic-soaring loop: low sweep -> ascend -> apex -> descend -> repeat. */
-    static class ToroaSoarGoal extends Goal {
-        private static final int LOW_SWEEP_DURATION = 70;
-        private static final int ASCEND_DURATION = 60;
-        private static final int APEX_DURATION = 90;
-        private static final int DESCEND_DURATION = 60;
 
+    static class ToroaFlyGoal extends Goal {
         private final ToroaEntity toroa;
 
-        public ToroaSoarGoal(ToroaEntity toroa) {
+        public ToroaFlyGoal(ToroaEntity toroa) {
             this.toroa = toroa;
             this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
         }
 
         @Override
         public boolean canUse() {
-            SoarPhase phase = this.toroa.getSoarPhase();
-            return phase == SoarPhase.LOW_SWEEP || phase == SoarPhase.ASCEND
-                    || phase == SoarPhase.APEX || phase == SoarPhase.DESCEND;
+            return this.toroa.isFlying();
         }
 
         @Override
         public boolean canContinueToUse() {
-            return this.canUse();
+            return this.toroa.isFlying();
         }
 
         @Override
         public void tick() {
-            SoarPhase phase = this.toroa.getSoarPhase();
-            float headingRad = this.toroa.windHeading * Mth.DEG_TO_RAD;
-            Vec3 forward = new Vec3(-Mth.sin(headingRad), 0.0D, Mth.cos(headingRad));
-
-            switch (phase) {
-                case ASCEND -> {
-                    Vec3 accel = forward.scale(0.05D).add(0.0D, 0.06D, 0.0D);
-                    this.toroa.setDeltaMovement(this.toroa.getDeltaMovement().scale(0.98D).add(accel));
-                    if (this.toroa.phaseTicks > ASCEND_DURATION) {
-                        this.toroa.setSoarPhase(SoarPhase.APEX);
-                    }
-                }
-                case APEX -> {
-                    double bankAngle = Math.sin(this.toroa.phaseTicks * 0.05D) * 0.15D;
-                    Vec3 banked = forward.yRot((float) bankAngle);
-                    Vec3 accel = banked.scale(0.09D).add(0.0D, -0.01D, 0.0D);
-                    this.toroa.setDeltaMovement(this.toroa.getDeltaMovement().scale(0.995D).add(accel));
-                    if (this.toroa.phaseTicks > APEX_DURATION) {
-                        this.toroa.setSoarPhase(SoarPhase.DESCEND);
-                    }
-                }
-                case DESCEND -> {
-                    Vec3 accel = forward.scale(0.07D).add(0.0D, -0.05D, 0.0D);
-                    this.toroa.setDeltaMovement(this.toroa.getDeltaMovement().scale(0.98D).add(accel));
-                    boolean nearSurface = this.toroa.getY() < this.toroa.level().getSeaLevel() + 3.0D;
-                    if (this.toroa.phaseTicks > DESCEND_DURATION || nearSurface) {
-                        this.toroa.setSoarPhase(SoarPhase.LOW_SWEEP);
-                    }
-                }
-                case LOW_SWEEP -> {
-                    Vec3 accel = forward.scale(0.1D).add(0.0D, 0.0D, 0.0D);
-                    this.toroa.setDeltaMovement(this.toroa.getDeltaMovement().scale(0.99D).add(accel));
-                    if (this.toroa.phaseTicks > LOW_SWEEP_DURATION) {
-                        this.toroa.setSoarPhase(SoarPhase.ASCEND);
-                    }
-                }
-                default -> {}
+            // Once the navigation has finished (or never had) a destination, pick
+            // a new random point to fly toward.
+            if (this.toroa.getNavigation().isDone()) {
+                RandomSource random = this.toroa.getRandom();
+                double x = this.toroa.getX() + (random.nextDouble() - 0.5D) * 40.0D;
+                double y = this.toroa.getY() + (random.nextDouble() - 0.3D) * 12.0D;
+                double z = this.toroa.getZ() + (random.nextDouble() - 0.5D) * 40.0D;
+                this.toroa.getNavigation().moveTo(x, y, z, 1.2D);
             }
-
-            this.toroa.getLookControl().setLookAt(
-                    this.toroa.getX() + forward.x, this.toroa.getY(), this.toroa.getZ() + forward.z);
         }
     }
 
+    //Custom goal: while flying low over the water, snatch up nearby fish
     static class ToroaFeedGoal extends Goal {
         private final ToroaEntity toroa;
 
@@ -374,7 +337,7 @@ public class ToroaEntity extends Animal {
 
         @Override
         public boolean canUse() {
-            return this.toroa.getSoarPhase() == SoarPhase.LOW_SWEEP
+            return this.toroa.isFlying()
                     && this.toroa.getY() < this.toroa.level().getSeaLevel() + 4.0D;
         }
 
@@ -383,7 +346,7 @@ public class ToroaEntity extends Animal {
             List<AbstractFish> nearby = this.toroa.level().getEntitiesOfClass(
                     AbstractFish.class, this.toroa.getBoundingBox().inflate(3.0D, 2.0D, 3.0D));
             if (!nearby.isEmpty()) {
-                nearby.get(0).discard(); // TODO: replace with a proper snatch/feed effect instead of despawn
+                nearby.get(0).discard(); // "Catches" the first fish found
                 this.toroa.gameEvent(net.minecraft.world.level.gameevent.GameEvent.EAT);
             }
         }

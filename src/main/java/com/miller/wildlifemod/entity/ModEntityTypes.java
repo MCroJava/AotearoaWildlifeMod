@@ -34,7 +34,7 @@ public final class ModEntityTypes {
                     .sized(0.8F, 0.8F));
 
     public static final EntityType<ToroaEntity> TOROA = register(
-            "albatross",
+            "toroa",
             EntityType.Builder.of(ToroaEntity::new, MobCategory.CREATURE)
                     .sized(1.2F, 1.2F));
 

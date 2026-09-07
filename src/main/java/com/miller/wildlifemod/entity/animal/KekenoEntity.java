@@ -29,6 +29,7 @@ import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
+
 public class KekenoEntity extends Animal {
 
     private static final EntityDataAccessor<Boolean> DATA_HAULED_OUT =
@@ -41,23 +42,28 @@ public class KekenoEntity extends Animal {
 
     public KekenoEntity(EntityType<? extends Animal> entityType, Level level) {
         super(entityType, level);
+        // 0.0F malus means "no extra penalty for walking through water" — unlike Kiwi,
+        // Kekeno are totally fine going in and out of the sea.
         this.setPathfindingMalus(PathType.WATER, 0.0F);
-        this.moveControl = new KekenoMoveControl(this);
+        this.moveControl = new KekenoMoveControl(this); // Our own custom movement style, defined below.
     }
 
     public static AttributeSupplier.Builder createAttributes() {
         return Animal.createAnimalAttributes()
                 .add(Attributes.MAX_HEALTH, 14.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.16D)
-                .add(Attributes.ATTACK_DAMAGE, 2.0D);
+                .add(Attributes.ATTACK_DAMAGE, 2.0D); // Bull seals can be territorial, so we give a small bite.
     }
+
 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
-        builder.define(DATA_HAULED_OUT, false);
+        builder.define(DATA_HAULED_OUT, false); // Starts off false — not hauled out when first spawned.
     }
 
+    // Small "getter" and "setter" pair — the normal Java way of safely reading and
+    // writing a piece of data from outside the class.
     public boolean isHauledOut() {
         return this.entityData.get(DATA_HAULED_OUT);
     }
@@ -66,6 +72,10 @@ public class KekenoEntity extends Animal {
         this.entityData.set(DATA_HAULED_OUT, hauledOut);
     }
 
+    /**
+     * "Amphibious" navigation automatically handles switching between walking on
+     * land and swimming through water, which is exactly what a seal needs.
+     */
     @Override
     protected PathNavigation createNavigation(Level level) {
         return new AmphibiousPathNavigation(this, level);
@@ -73,13 +83,17 @@ public class KekenoEntity extends Animal {
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(0, new BreatheAirGoal());
+        this.goalSelector.addGoal(0, new BreatheAirGoal()); // Surfaces for air if it's running low.
         this.goalSelector.addGoal(1, new PanicGoal(this, 1.8D));
         this.goalSelector.addGoal(2, new BreedGoal(this, 1.0D));
-        this.goalSelector.addGoal(3, new KekenoHuntFishGoal(this));
+        this.goalSelector.addGoal(3, new KekenoHuntFishGoal(this)); // Chases and "eats" nearby fish.
+        // AvoidEntityGoal makes it swim/waddle away from players sometimes — real
+        // seals are naturally a bit wary of people, especially when not hauled out.
         this.goalSelector.addGoal(4, new AvoidEntityGoal<>(this, Player.class, 6.0F, 1.0D, 1.2D,
                 (entity) -> !this.isHauledOut() && this.random.nextInt(4) == 0));
-        this.goalSelector.addGoal(5, new RandomSwimmingGoal(this, 1.0D, 8));
+        this.goalSelector.addGoal(5, new RandomSwimmingGoal(this, 1.0D, 8)); // Swims around aimlessly when nothing else to do.
+        // Only wander around on land while it's actually hauled out — otherwise this
+        // goal just won't activate, thanks to the canUse() override below.
         this.goalSelector.addGoal(6, new RandomStrollGoal(this, 0.7D) {
             @Override
             public boolean canUse() {
@@ -94,26 +108,39 @@ public class KekenoEntity extends Animal {
         return stack.is(ItemTags.FISHES);
     }
 
+    // isPushedByFluid() = false stops water currents from shoving the Kekeno around —
+    // it should be swimming deliberately, not getting dragged by the current.
     @Override
     public boolean isPushedByFluid() {
         return false;
     }
 
+    // Lets the Kekeno stay underwater indefinitely without its air meter mattering
+    // for drowning purposes — we handle the "needs to breathe" behavior ourselves
+    // instead, through BreatheAirGoal below.
     @Override
     public boolean canBreatheUnderwater() {
         return true;
     }
 
+    /**
+     * Every tick, decide which animation should be playing based on what the
+     * Kekeno is actually doing right now (swimming vs. walking/idle/running on land).
+     */
     @Override
     public void aiStep() {
         super.aiStep();
         if (this.isInWater() && this.walkAnimation.isMoving()) {
+            // walkAnimation.isMoving() is a built-in Minecraft check that's true
+            // whenever the entity's legs/body would visually be moving.
             this.swimmingAnimationState.startIfStopped(this.tickCount);
             this.idleAnimationState.stop();
             this.walkingAnimationState.stop();
             this.runningAnimationState.stop();
         } else {
             this.swimmingAnimationState.stop();
+            // Hands off the idle/walking/running decision to a shared helper method,
+            // since Kiwi and Hoiho both need this exact same logic on land.
             WildlifeAnimationUtils.updateLocomotion(this, this.idleAnimationState, this.walkingAnimationState, this.runningAnimationState);
         }
     }
@@ -139,11 +166,19 @@ public class KekenoEntity extends Animal {
         return SoundEvents.GENERIC_DEATH;
     }
 
+    // Overriding this just swaps in a slightly randomized pitch for the splash sound
+    // each time it swims, so it doesn't sound identical and robotic every time.
     @Override
     protected void playSwimSound(float volume) {
         this.playSound(SoundEvents.GENERIC_SWIM, volume, 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.4F);
     }
 
+    /**
+     * A MoveControl decides HOW an entity physically moves toward wherever its
+     * navigation is currently taking it — this custom one gives the Kekeno a
+     * gentle upward push while swimming, so it drifts more like a real seal
+     * instead of gliding in a perfectly flat line.
+     */
     static class KekenoMoveControl extends MoveControl {
         private final KekenoEntity kekeno;
 
@@ -157,14 +192,20 @@ public class KekenoEntity extends Animal {
             if (this.kekeno.isInWater()) {
                 this.kekeno.setDeltaMovement(this.kekeno.getDeltaMovement().add(0.0D, 0.005D, 0.0D));
                 if (this.operation == Operation.MOVE_TO && !this.kekeno.getNavigation().isDone()) {
+                    // Smoothly ramps the current speed toward the target speed instead
+                    // of snapping to it instantly — Mth.lerp() blends two numbers together.
                     float speed = (float) (this.speedModifier * this.kekeno.getAttributeValue(Attributes.MOVEMENT_SPEED));
                     this.kekeno.setSpeed(net.minecraft.util.Mth.lerp(0.125F, this.kekeno.getSpeed(), speed));
                 }
             }
-            super.tick();
+            super.tick(); // Still let the normal movement logic run afterward.
         }
     }
 
+    /**
+     * Custom goal: if the Kekeno's air supply gets low while it's underwater,
+     * head toward the surface to breathe.
+     */
     class BreatheAirGoal extends Goal {
         public BreatheAirGoal() {
             this.setFlags(java.util.EnumSet.of(Goal.Flag.JUMP, Goal.Flag.MOVE));
@@ -178,6 +219,8 @@ public class KekenoEntity extends Animal {
 
         @Override
         public void tick() {
+            // DefaultRandomPos picks a nearby point roughly in the given direction —
+            // here we aim "4 blocks up" so the seal naturally heads toward the surface.
             Vec3 target = DefaultRandomPos.getPosTowards(KekenoEntity.this, 4, 2, new Vec3(
                     KekenoEntity.this.getX(), KekenoEntity.this.getY() + 4.0D, KekenoEntity.this.getZ()), Math.PI / 2);
             if (target != null) {
@@ -186,9 +229,12 @@ public class KekenoEntity extends Animal {
         }
     }
 
+    /**
+     * Custom goal: while swimming, look for nearby fish and chase one down.
+     */
     static class KekenoHuntFishGoal extends Goal {
         private final KekenoEntity kekeno;
-        private AbstractFish target;
+        private AbstractFish target; // The specific fish currently being chased, if any.
 
         public KekenoHuntFishGoal(KekenoEntity kekeno) {
             this.kekeno = kekeno;
@@ -198,10 +244,12 @@ public class KekenoEntity extends Animal {
         @Override
         public boolean canUse() {
             if (!this.kekeno.isInWater() || this.kekeno.isHauledOut()) return false;
+            // getEntitiesOfClass finds every entity of a given type within a box around
+            // the Kekeno — here, a 10-block bubble in every direction.
             java.util.List<AbstractFish> nearby = this.kekeno.level().getEntitiesOfClass(
                     AbstractFish.class, this.kekeno.getBoundingBox().inflate(10.0D));
             if (nearby.isEmpty()) return false;
-            this.target = nearby.get(this.kekeno.getRandom().nextInt(nearby.size()));
+            this.target = nearby.get(this.kekeno.getRandom().nextInt(nearby.size())); // Pick one at random.
             return true;
         }
 
@@ -213,8 +261,9 @@ public class KekenoEntity extends Animal {
         @Override
         public void tick() {
             if (this.target == null) return;
-            this.kekeno.getNavigation().moveTo(this.target, 1.3D);
+            this.kekeno.getNavigation().moveTo(this.target, 1.3D); // Chase toward the fish.
             if (this.kekeno.distanceToSqr(this.target) < 2.5D) {
+                // Close enough to "catch" it — for now this just removes the fish.
                 this.target.discard();
                 this.kekeno.gameEvent(net.minecraft.world.level.gameevent.GameEvent.EAT);
             }
@@ -222,7 +271,7 @@ public class KekenoEntity extends Animal {
 
         @Override
         public void stop() {
-            this.target = null;
+            this.target = null; // Forget the target once the goal ends, so we don't chase a stale reference.
         }
     }
 }

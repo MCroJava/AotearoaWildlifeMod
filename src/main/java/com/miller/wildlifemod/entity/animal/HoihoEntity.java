@@ -26,6 +26,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.EnumSet;
 import java.util.List;
 
+//This class is in charge of the Hoiho mob, It defines how it behaves in game
 
 public class HoihoEntity extends Animal {
     //created the animation states, so it knows what to use for animations.
@@ -37,29 +38,31 @@ public class HoihoEntity extends Animal {
     public final AnimationState swimAnimationState = new AnimationState();
     public final AnimationState eatAnimationState = new AnimationState();
     public final AnimationState temptedAnimationState = new AnimationState();
-
+//creates instance variables.
     private boolean wasInWater;
     private int enterWaterTicks;
     private int eatTicks;
     private int celebrateTicks;
     private int celebrateCooldown;
 
+    //Adds pathfinding to the entity, this tells the hoiho to go in water
     public HoihoEntity(EntityType<? extends Animal> entityType, Level level) {
         super(entityType, level);
         this.setPathfindingMalus(PathType.WATER, 0.0F);
     }
-
+    //sets the hoiho's health and speed attributes
     public static AttributeSupplier.Builder createAttributes() {
         return Animal.createAnimalAttributes()
                 .add(Attributes.MAX_HEALTH, 8.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.14D);
     }
-
+    //Creates the navigation pathfinding under the mojang class "AmphibiousPathNavigation".
     @Override
     protected PathNavigation createNavigation(Level level) {
         return new AmphibiousPathNavigation(this, level);
     }
 
+    //creates a set of goals for the hoiho
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new HoihoBreatheGoal());
@@ -68,7 +71,7 @@ public class HoihoEntity extends Animal {
         this.goalSelector.addGoal(3, new HoihoDiveHuntGoal(this));
         this.goalSelector.addGoal(4, new HoihoReturnToNestGoal(this, 1.0D));
         this.goalSelector.addGoal(5, new TemptGoal(this, 1.1D, this::isFood, false));
-        this.goalSelector.addGoal(6, new RandomSwimmingGoal(this, 1.2D, 6));
+        this.goalSelector.addGoal(6, new RandomSwimmingGoal(this, 3D, 6));
         this.goalSelector.addGoal(7, new RandomStrollGoal(this, 0.6D) {
             @Override
             public boolean canUse() {
@@ -79,25 +82,26 @@ public class HoihoEntity extends Animal {
         this.goalSelector.addGoal(9, new RandomLookAroundGoal(this));
     }
 
+    //identifies the food item group for the hoiho as "fishes"
     @Override
     public boolean isFood(ItemStack stack) {
         return stack.is(ItemTags.FISHES);
     }
-
+    //it doesnt drown.
     @Override
     public boolean canBreatheUnderwater() {
         return true;
     }
-
+    //water doesnt push it.
     @Override
     public boolean isPushedByFluid() {
         return false;
     }
-
+    //plays the eating animation.
     public void playEatAnimation() {
         this.eatTicks = 15;
     }
-
+    //It follows players when they are holding a fish.
     private boolean isBeingTempted() {
         List<Player> nearby = this.level().getEntitiesOfClass(Player.class, this.getBoundingBox().inflate(6.0D));
         for (Player player : nearby) {
@@ -108,6 +112,7 @@ public class HoihoEntity extends Animal {
         return false;
     }
 
+    //this controlls the animals ai.
     @Override
     public void aiStep() {
         super.aiStep();
@@ -180,23 +185,70 @@ public class HoihoEntity extends Animal {
             }
         }
     }
-
+    //this handles the swimming in water with the hoiho.
     @Override
-    public void travel(Vec3 travelVector) {
-        super.travel(travelVector);
-        // Porpoising — small leap while swimming fast near the surface
-        if (this.isInWater() && this.getDeltaMovement().horizontalDistanceSqr() > 0.01D
-                && this.random.nextInt(30) == 0 && this.getY() < this.level().getSeaLevel() + 0.5D) {
-            this.setDeltaMovement(this.getDeltaMovement().add(0.0D, 0.28D, 0.0D));
+    public void travel(Vec3 movementInput) {
+        if (this.isEffectiveAi() && this.isInWater()) {
+
+            // Basic swimming movement
+            this.moveRelative(0.12f, movementInput);
+            this.move(MoverType.SELF, this.getDeltaMovement());
+            this.setDeltaMovement(this.getDeltaMovement().scale(0.8));
+
+            // This makes the penguin bouyant
+            Vec3 vel = this.getDeltaMovement();
+            if (vel.y < 0.05D) {
+                this.setDeltaMovement(vel.x, vel.y + 0.03D, vel.z);
+            }
+
+            // Navigation swimming
+            if (!this.getNavigation().isDone()) {
+                BlockPos targetBlockPos = this.getNavigation().getTargetPos();
+                if (targetBlockPos != null) {
+                    Vec3 targetPos = Vec3.atCenterOf(targetBlockPos);
+                    Vec3 currentPos = this.position();
+
+                    Vec3 direction = targetPos.subtract(currentPos).normalize();
+                    double distance = currentPos.distanceTo(targetPos);
+
+                    if (distance > 1.0) {
+                        Vec3 velocity = this.getDeltaMovement();
+                        double speed = 0.05;
+
+                        this.setDeltaMovement(
+                                velocity.x + direction.x * speed,
+                                velocity.y + direction.y * speed,
+                                velocity.z + direction.z * speed
+                        );
+                    }
+                }
+            } else {
+                // Random drifting when idle
+                if (this.getRandom().nextInt(100) == 0) {
+                    Vec3 randomVel = new Vec3(
+                            (this.getRandom().nextDouble() - 0.5) * 0.1,
+                            (this.getRandom().nextDouble() - 0.5) * 0.1,
+                            (this.getRandom().nextDouble() - 0.5) * 0.1
+                    );
+                    this.setDeltaMovement(this.getDeltaMovement().add(randomVel));
+                }
+            }
+
+        } else {
+            super.travel(movementInput);
         }
     }
 
+
+
+
+    //they can be bred and have offsprings.
     @Nullable
     @Override
     public AgeableMob getBreedOffspring(ServerLevel level, AgeableMob mate) {
         return com.miller.wildlifemod.entity.ModEntityTypes.HOIHO.create(level, net.minecraft.world.entity.EntitySpawnReason.BREEDING);
     }
-
+    //these handle the sound effects.
     @Override
     protected SoundEvent getAmbientSound() {
         return null; // TODO: ModSounds.HOIHO_CALL.get()
@@ -212,6 +264,7 @@ public class HoihoEntity extends Animal {
         return SoundEvents.GENERIC_DEATH;
     }
 
+    //this handles the HoihoBreatheGoal in the goals.
     class HoihoBreatheGoal extends Goal {
         public HoihoBreatheGoal() {
             this.setFlags(EnumSet.of(Goal.Flag.JUMP, Goal.Flag.MOVE));
