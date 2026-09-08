@@ -27,6 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.EnumSet;
 import java.util.List;
 
+//This class is in charge of the Piwakawaka mob, It defines how it behaves in game
 
 public class PiwakawakaEntity extends Animal {
 

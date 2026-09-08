@@ -23,6 +23,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.PathType;
 import org.jetbrains.annotations.Nullable;
 
+//This class is in charge of the Kiwi mob, It defines how it behaves in game
 
 public class KiwiEntity extends Animal {
 
@@ -65,12 +66,8 @@ public class KiwiEntity extends Animal {
         return navigation;
     }
 
-    /**
-     * This is the Kiwi's to-do list, from most important (0) to least important.
-     * Every tick (20 times a second), the game checks this list top to bottom and
-     * runs the first goal that says it's allowed to run. Think of it like a priority
-     * queue for behavior — "am I in danger? No? Am I hungry? No? Then just wander."
-     */
+
+    //This is the Kiwi's to-do list, from most important (0) to least important.
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this)); // Keeps it from sinking if it ends up in water.
@@ -98,11 +95,6 @@ public class KiwiEntity extends Animal {
         return stack.is(ItemTags.FISHES);
     }
 
-    /**
-     * aiStep() runs every single tick (20 times per second) while the entity exists.
-     * It's a good spot for anything that needs to be constantly checked or updated —
-     * here, we use it to keep the animation switches in sync with how the Kiwi is moving.
-     */
     @Override
     public void aiStep() {
         super.aiStep(); // Always let the parent class do its normal stuff first.
@@ -170,7 +162,6 @@ public class KiwiEntity extends Animal {
             return this.kiwi.getRandom().nextInt(200) == 0;
         }
 
-        // canContinueToUse() answers: "Should this goal KEEP running right now?"
         @Override
         public boolean canContinueToUse() {
             return this.probeTicks > 0;

@@ -29,6 +29,7 @@ import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
+//This class is in charge of the Kekeno mob, It defines how it behaves in game
 
 public class KekenoEntity extends Animal {
 
@@ -42,7 +43,6 @@ public class KekenoEntity extends Animal {
 
     public KekenoEntity(EntityType<? extends Animal> entityType, Level level) {
         super(entityType, level);
-        // 0.0F malus means "no extra penalty for walking through water" — unlike Kiwi,
         // Kekeno are totally fine going in and out of the sea.
         this.setPathfindingMalus(PathType.WATER, 0.0F);
         this.moveControl = new KekenoMoveControl(this); // Our own custom movement style, defined below.
@@ -52,7 +52,7 @@ public class KekenoEntity extends Animal {
         return Animal.createAnimalAttributes()
                 .add(Attributes.MAX_HEALTH, 14.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.16D)
-                .add(Attributes.ATTACK_DAMAGE, 2.0D); // Bull seals can be territorial, so we give a small bite.
+                .add(Attributes.ATTACK_DAMAGE, 2.0D); // Fur seals can be territorial, so we give a small bite.
     }
 
 
@@ -74,13 +74,13 @@ public class KekenoEntity extends Animal {
 
     /**
      * "Amphibious" navigation automatically handles switching between walking on
-     * land and swimming through water, which is exactly what a seal needs.
+     * land and swimming through water, which is exactly what a fur seal needs.
      */
     @Override
     protected PathNavigation createNavigation(Level level) {
         return new AmphibiousPathNavigation(this, level);
     }
-
+    //creates a set of goals that affect the entities Ai
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new BreatheAirGoal()); // Surfaces for air if it's running low.
@@ -109,14 +109,14 @@ public class KekenoEntity extends Animal {
     }
 
     // isPushedByFluid() = false stops water currents from shoving the Kekeno around —
-    // it should be swimming deliberately, not getting dragged by the current.
+    // it should be swimming deliberately, not getting dragged.
     @Override
     public boolean isPushedByFluid() {
         return false;
     }
 
     // Lets the Kekeno stay underwater indefinitely without its air meter mattering
-    // for drowning purposes — we handle the "needs to breathe" behavior ourselves
+    // for drowning purposes — it is handled, the "needs to breathe" behavior is done ourselves
     // instead, through BreatheAirGoal below.
     @Override
     public boolean canBreatheUnderwater() {

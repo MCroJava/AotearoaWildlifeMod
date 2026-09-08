@@ -31,15 +31,15 @@ import org.jetbrains.annotations.Nullable;
 import java.util.EnumSet;
 import java.util.List;
 
+//This class is in charge of the Toroa mob, It defines how it behaves in game
+
 public class ToroaEntity extends Animal {
 
     // Whether this particular Toroa is currently floating/resting on water.
-    // See KekenoEntity for a fuller explanation of what "synced" data means.
     private static final EntityDataAccessor<Boolean> DATA_RESTING_ON_WATER =
             SynchedEntityData.defineId(ToroaEntity.class, EntityDataSerializers.BOOLEAN);
 
-    // One animation "switch" per clip. lowSweepPhase1AnimationState is kept here
-    // (so nothing else that references it breaks) but is never turned on anymore.
+    //these are the animation states that were defined in the EntityRenderer class
     public final AnimationState lowSweepPhase1AnimationState = new AnimationState();
     public final AnimationState ascendPhase2AnimationState = new AnimationState();
     public final AnimationState apexPhase3AnimationState = new AnimationState();
@@ -49,7 +49,7 @@ public class ToroaEntity extends Animal {
     public final AnimationState waddlingAnimationState = new AnimationState();
     public final AnimationState idleAnimationState = new AnimationState();
 
-    // How fast (in blocks per tick) it needs to be moving up or down before we
+    // How fast it needs to be moving up or down before we
     // count that as "ascending"/"descending" rather than just level flight.
     // Small, so gentle drifting doesn't cause flickering between animations.
     private static final double VERTICAL_ANIMATION_THRESHOLD = 0.02D;
@@ -59,7 +59,7 @@ public class ToroaEntity extends Animal {
 
     public ToroaEntity(EntityType<? extends Animal> entityType, Level level) {
         super(entityType, level);
-        // FlyingMoveControl(this, 10, false) — "10" controls how sharply it can turn,
+        // FlyingMoveControl "10" controls how sharply it can turn,
         // and "false" means it can't hover in place (it always needs forward motion).
         this.moveControl = new FlyingMoveControl(this, 10, false);
     }
@@ -97,7 +97,7 @@ public class ToroaEntity extends Animal {
         navigation.setCanFloat(true); // Allowed to float on the surface of water.
         return navigation;
     }
-
+    //these are goals that affect how the entity behaves.
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new ToroaRestOnWaterGoal(this));
@@ -107,7 +107,7 @@ public class ToroaEntity extends Animal {
         this.goalSelector.addGoal(4, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
     }
-
+    //tells the game what food Toroa can eat
     @Override
     public boolean isFood(ItemStack stack) {
         return stack.is(ItemTags.FISHES);
@@ -129,13 +129,13 @@ public class ToroaEntity extends Animal {
         this.updateAnimationStates();
     }
 
-    /**
-     * Decides which animation to play. While flying, this is based purely on
-     * vertical speed (getDeltaMovement().y) — moving up plays Ascend, moving
-     * down plays Descend, and anything in between (roughly level) plays Apex.
-     * While grounded, it falls back to the same waddling/standing/idle logic
-     * as before.
-     */
+
+     //Decides which animation to play. While flying, this is based purely on
+     //vertical speed (getDeltaMovement().y) — moving up plays Ascend, moving
+     //down plays Descend, and anything in between (roughly level) plays Apex.
+     //While grounded, it falls back to the same waddling/standing/idle logic
+     //as before.
+
     private void updateAnimationStates() {
         this.lowSweepPhase1AnimationState.stop(); // Never used in this version.
         this.ascendPhase2AnimationState.stop();
@@ -158,7 +158,7 @@ public class ToroaEntity extends Animal {
                 this.apexPhase3AnimationState.startIfStopped(this.tickCount); // Roughly level flight.
             }
         } else {
-            // On the ground: waddling while moving, standing while stationary, with an
+            // On the ground, it is waddling while moving, standing while stationary, with an
             // occasional fallback to idle so it isn't rigid the whole time grounded.
             if (this.walkAnimation.isMoving()) {
                 this.waddlingAnimationState.startIfStopped(this.tickCount);
@@ -180,10 +180,9 @@ public class ToroaEntity extends Animal {
         return this.isFlying();
     }
 
-    // No fall damage for a soaring seabird.
+    // No fall damage.
     @Override
     protected void checkFallDamage(double y, boolean onGround, BlockState state, BlockPos pos) {
-        // no fall damage for a soaring seabird
     }
 
     @Override
@@ -212,7 +211,7 @@ public class ToroaEntity extends Animal {
         return SoundEvents.GENERIC_DEATH;
     }
 
-    // Custom goal: occasionally settles down to float and rest on open water.
+    // Custom goal makes it occasionally settle down to float and rest on open water.
     static class ToroaRestOnWaterGoal extends Goal {
         private final ToroaEntity toroa;
 
@@ -245,7 +244,7 @@ public class ToroaEntity extends Animal {
             this.toroa.setRestingOnWater(false);
         }
     }
-      //Custom goal: albatrosses famously can't take off from a standstill — they
+      //the Toroa will
       //need a running (or paddling) start first. Once the run finishes, we just
       //give it an upward boost and let ToroaFlyGoal take over from there.
 
